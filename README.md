@@ -8,3 +8,5 @@ This is still very early in development, but some general goals for this project
 - Get some common blocks done
 - Make a code generator for ahk
 - Add more blocks and guis
+
+This project isn't affiliated with AutoHotKey
