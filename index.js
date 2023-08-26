@@ -1,36 +1,5 @@
 Blockly.defineBlocksWithJsonArray([ // TODO: Sort into own json files
 	{
-		"type": "send",
-		"message0": "Send %1",
-		"args0": [
-		  {
-			"type": "input_value",
-			"name": "Key",
-			"check": "String"
-		  }
-		],
-		"previousStatement": null,
-		"nextStatement": null,
-		"colour": 90,
-		"tooltip": "Send a key",
-		"helpUrl": ""
-	  },
-	  {
-		"type": "hotkey",
-		"message0": "Hotkey %1",
-		"args0": [
-		{
-			"type": "input_value",
-			"name": "hotkey_keys",
-			"check": "String"
-		}
-		],
-		"nextStatement": null,
-		"colour": 180,
-		"tooltip": "Listens for keys stated on the side to be pressed then running below",
-		"helpUrl": ""
-	},
-	{
 		"type": "hotkey_edit",
 		"message0": "Hotkey %1",
 		"args0": [
@@ -45,21 +14,6 @@ Blockly.defineBlocksWithJsonArray([ // TODO: Sort into own json files
 		"tooltip": "TODO",
 		"helpUrl": ""
 	},
-	{
-		"type": "sleep",
-		"message0": "Sleep %1",
-		"args0": [
-		{
-			"type": "input_value",
-			"name": "NAME"
-		}
-		],
-		"previousStatement": null,
-		"nextStatement": null,
-		"colour": 230,
-		"tooltip": "Sleeps for the specified time (in milliseconds)",
-		"helpUrl": ""
-	}
 ])
 
 
@@ -72,7 +26,27 @@ const toolbox = {
 			"contents": [
 				{
 					"kind": "block",
+					"type": "hotkey"
+				},
+				{
+					"kind": "block",
+					"type": "controls_if"
+				},
+				{
+					"kind": "block",
+					"type": "text"
+				},
+				{
+					"kind": "block",
+					"type": "math_number"
+				},
+				{
+					"kind": "block",
 					"type": "send"
+				},
+				{
+					"kind": "block",
+					"type": "sleep"
 				}
 			],
 		},
