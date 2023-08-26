@@ -1,4 +1,3 @@
-
 Blockly.defineBlocksWithJsonArray([ // TODO: Sort into own json files
 	{
 		"type": "send",
@@ -62,6 +61,8 @@ Blockly.defineBlocksWithJsonArray([ // TODO: Sort into own json files
 		"helpUrl": ""
 	}
 ])
+
+
 const toolbox = {
     "kind": "categoryToolbox",
     "contents": [
@@ -72,6 +73,20 @@ const toolbox = {
 				{
 					"kind": "block",
 					"type": "send"
+				}
+			],
+		},
+		{
+			"kind": "category",
+			"name": "Gui",
+			"contents": [
+				{
+					"kind": "block",
+					"type": "gui_header"
+				},
+				{
+					"kind": "block",
+					"type": "gui_add"
 				}
 			]
 		}
