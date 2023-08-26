@@ -1,4 +1,4 @@
-[
+Blockly.defineBlocksWithJsonArray([
 	{
 		"type": "gui_header",
 		"message0": "Gui %1 %2 Position %3",
@@ -19,7 +19,7 @@
 		],
 		"nextStatement": null,
 		"colour": 230,
-		"tooltip": "",
+		"tooltip": "TODO",
 		"helpUrl": ""
 	},
 	{
@@ -163,4 +163,4 @@
 		"tooltip": "Adds a control to the selected gui, requires name on side",
 		"helpUrl": ""
 	}
-]
+])
