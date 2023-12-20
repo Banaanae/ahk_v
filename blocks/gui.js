@@ -154,12 +154,15 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([{
 },
 {
 	"type": "gui_show",
-	"message0": "Show the GUI with name %1 X Position %2 Y Position %3 Width %4 Height %5",
+	"message0": "Show the GUI with name %1 %2 X Position %3 Y Position %4 Width %5 Height %6",
 	"args0": [
 		{
 			"type": "field_input",
 			"name": "gui_show_name",
 			"text": "name"
+		},
+		{
+			"type": "input_dummy"
 		},
 		{
 			"type": "field_input",
