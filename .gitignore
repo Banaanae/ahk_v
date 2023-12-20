@@ -1,2 +1,5 @@
-# Custom blocks in testing
-customBlocks/test.json
+# Node Modules
+node_modules/
+
+# Site Builds
+dist/
