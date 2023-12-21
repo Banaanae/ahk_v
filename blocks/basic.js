@@ -1,5 +1,6 @@
 import * as Blockly from 'blockly';
-
+//TODO: Make most blocks inline
+// "inputsInline": true,
 export const basicBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([{
 	"type": "singleinstance",
 	"message0": "#SingleInstance %1",
@@ -59,11 +60,11 @@ export const basicBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([{
 	"message0": "Send %1",
 	"args0": [
 		{
-			"type": "field_input",
-			"name": "send_keys",
-			"check": "String"
+			"type": "input_value",
+			"name": "send_keys"
 		}
 	],
+	"inputsInline": true,
 	"previousStatement": null,
 	"nextStatement": null,
 	"colour": 90,
@@ -81,6 +82,7 @@ export const basicBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([{
 			"check": "Number"
 		}
 	],
+	"inputsInline": true,
 	"previousStatement": null,
 	"nextStatement": null,
 	"colour": 230,
