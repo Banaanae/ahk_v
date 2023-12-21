@@ -51,7 +51,8 @@ ahkGen.forBlock['singleinstance'] = function(block, generator) {
 
 ahkGen.forBlock['sleep'] = function(block, generator) {
 	const delay = block.getFieldValue('sleep_delay');
-	return `sleep(${delay})`;
+	const sanitised = delay.replace(/\D/g, ''); // Only call for non variables
+	return `sleep(${sanitised})`;
 };
 
 ahkGen.forBlock['text'] = function(block) {
