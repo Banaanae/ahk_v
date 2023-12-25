@@ -34,6 +34,10 @@ export const toolbox = {
 					"kind": "block",
 					"type": "sleep"
 				},
+                {
+                    "kind": "block",
+                    "type": "msgbox"
+                },
 				{
                     "kind": "block",
                     "type": "logic_compare"
@@ -116,10 +120,6 @@ export const toolbox = {
                 },
                 {
                     "kind": "block",
-                    "type": "lists_create_with"
-                },
-                {
-                    "kind": "block",
                     "type": "lists_repeat"
                 },
                 {
@@ -186,6 +186,10 @@ export const toolbox = {
                 },
                 {
                     "kind": "block",
+                    "type": "math_round_cust"
+                },
+                {
+                    "kind": "block",
                     "type": "math_on_list"
                 },
                 {
@@ -244,10 +248,46 @@ export const toolbox = {
 					"kind": "block",
 					"type": "gui_header"
 				},
-				{
-					"kind": "block",
-					"type": "gui_add"
-				},
+                {
+                    "kind": "block",
+                    "type": "gui_add_text"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_edit"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_picture"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_button"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_checkbox"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_radio"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_ddl"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_combobox"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_listbox"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_datetime"
+                },
 				{
 					"kind": "block",
 					"type": "gui_show"

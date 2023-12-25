@@ -1,12 +1,15 @@
+// https://github.com/google/blockly-samples/tree/master/examples/custom-generator-codelab <3
 import * as Blockly from 'blockly';
 import {basicBlocks} from './blocks/basic';
 import {guiBlocks} from './blocks/gui';
+import {mathBlocks} from './blocks/math';
 import {ahkGen} from './codeGen/ahk';
 import {toolbox} from './toolbox';
 import './index.css';
 
 Blockly.common.defineBlocks(basicBlocks);
 Blockly.common.defineBlocks(guiBlocks);
+Blockly.common.defineBlocks(mathBlocks);
 
 const codeDiv = document.getElementById('generatedCode').firstChild;
 const blocklyDiv = document.getElementById('blocklyDiv');
@@ -40,7 +43,6 @@ workspace.addChangeListener((event) => {
 	if (event.isUiEvent) return;
 	save(workspace);
 });
-
 
 workspace.addChangeListener((event) => {
 	if (event.isUiEvent || event.type == Blockly.Events.FINISHED_LOADING || workspace.isDragging()) {

@@ -1,15 +1,17 @@
 # ahk_v
 
-AutoHotKey turned into a visual langauge with Blockly
+ahk_v is a visual editor for ahk using blockly
+It is currently quite early in development, but many simpler blocks and math functions are done
 
 ## Roadmap
 
-This is still very early in development, but some general goals for this project is
-- Get some common blocks done
-- Make a code generator for ahk
-- Add more blocks and guis
-- Wiki for each saying what it does + examples
-- Standard colouring
-- better categories
+- [X] Get some common blocks done
+- [X] Make a code generator for ahk
+- [ ] Add more blocks and guis
+- - [ ] Gui Options
+- [ ] Wiki for each saying what it does + examples
+- [ ] Standard colouring
+- [ ] Better categories (Sort and dupelicate some blocks into multiple categories)
 
-This project isn't affiliated with AutoHotKey
+
+<sub>This project isn't affiliated with AutoHotKey</sub>
