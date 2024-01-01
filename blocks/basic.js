@@ -58,6 +58,22 @@ export const basicBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"helpUrl": ""
 },
 {
+	"type": "msgbox_simple",
+	"message0": "Message box with Body %1",
+	"args0": [
+	  	{
+			"type": "input_value",
+			"name": "msgbox_body"
+		},
+	],
+	"inputsInline": true,
+	"previousStatement": null,
+	"nextStatement": null,
+	"colour": 230,
+	"tooltip": "Creates a message box with the specified text\nBody can be ommited for default\n\"Press OK to continue.\"",
+	"helpUrl": ""
+},
+{
 	"type": "msgbox",
 	"message0": "Message box with Title %1 Body %2 Buttons %3 Icon %4 Default buttons %5 Modality %6 %7 Help Button %8 Align text right %9 Right to Left reading",
 	"args0": [

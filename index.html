@@ -10,6 +10,7 @@
 			<div id="outputPane">
 				<pre id="generatedCode"><code></code></pre>
 				<div id="output"></div><br>
+				<button onclick="navigator.clipboard.writeText(document.querySelector('#generatedCode > code:nth-child(1)').innerHTML.replace(/<br>/g, '\n'))">Copy code</button>
 				<button onclick="localStorage.removeItem('ahk_v'); window.location.href = ''">Clear local storage</button>
 			</div>
 		</div>

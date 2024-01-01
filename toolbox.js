@@ -36,6 +36,10 @@ export const toolbox = {
 				},
                 {
                     "kind": "block",
+                    "type": "msgbox_simple"
+                },
+                {
+                    "kind": "block",
                     "type": "msgbox"
                 },
 				{
@@ -67,6 +71,10 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "text_join"
+                },
+                {
+                    "kind": "block",
+                    "type": "text_prompt_ext"
                 },
                 {
                     "kind": "block",
@@ -107,6 +115,10 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "text_replace"
+                },
+				{
+                    "kind": "block",
+                    "type": "text_reverse"
                 }
             ],
         },
@@ -153,6 +165,10 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "lists_sort"
+                },
+				{
+                    "kind": "block",
+                    "type": "lists_reverse"
                 }
             ],
         },
@@ -203,6 +219,10 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "math_random_int"
+                },
+				{
+                    "kind": "block",
+                    "type": "math_random_float"
                 },
                 {
                     "kind": "block",
@@ -295,39 +315,9 @@ export const toolbox = {
 			]
 		},
         {
-            "kind": "sep"
-        },
-        {
-            "kind": "category",
-            "name": "Variables",
-            "categorystyle": "variable_category",
-            "custom": "VARIABLE"
-        },
-        {
-            "kind": "category",
-            "name": "Functions",
-            "categorystyle": "procedure_category",
-            "custom": "PROCEDURE"
-        },
-		{
-			"kind": "sep"
-		},
-		{
 			"kind": "category",
-			"name": "Misc/WIP",
+			"name": "Colour",
 			"contents": [
-				{
-                    "kind": "block",
-                    "type": "text_print"
-                },
-                {
-                    "kind": "block",
-                    "type": "text_prompt_ext"
-                },
-				{
-                    "kind": "block",
-                    "type": "math_random_float"
-                },
 				{
                     "kind": "block",
                     "type": "colour_picker"
@@ -343,14 +333,81 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "colour_blend"
-                },
-				{
+                }
+			]
+		},
+        {
+            "kind": "sep"
+        },
+        {
+            "kind": "category",
+            "name": "Variables",
+            "categorystyle": "variable_category",
+            "custom": "VARIABLE"
+        },
+        {
+            "kind": "category",
+            "name": "Built-In Variables",
+            "contents": [
+                {
                     "kind": "block",
-                    "type": "text_reverse"
+                    "type": "a_setbuiltin"
                 },
-				{
+                {
                     "kind": "block",
-                    "type": "lists_reverse"
+                    "type": "a_special"
+                },
+                {
+                    "kind": "block",
+                    "type": "a_property"
+                },
+                {
+                    "kind": "block",
+                    "type": "a_time"
+                },
+                {
+                    "kind": "block",
+                    "type": "a_settings"
+                },
+                {
+                    "kind": "block",
+                    "type": "a_idle"
+                },
+                {
+                    "kind": "block",
+                    "type": "a_hotkey"
+                },
+                {
+                    "kind": "block",
+                    "type": "a_os"
+                },
+                {
+                    "kind": "block",
+                    "type": "a_misc"
+                },
+                {
+                    "kind": "block",
+                    "type": "a_loop"
+                }
+            ]
+        },
+        {
+            "kind": "category",
+            "name": "Functions",
+            "categorystyle": "procedure_category",
+            "custom": "PROCEDURE"
+        },
+		{
+			"kind": "sep"
+		},
+		{
+			"kind": "category",
+			"name": "Old",
+            "hidden": "true",
+			"contents": [
+                {
+                    "kind": "label",
+                    "text": "Old blocks for backwards compatability (Currently None)"
                 }
 			]
 		}

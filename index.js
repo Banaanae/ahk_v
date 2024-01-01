@@ -3,6 +3,7 @@ import * as Blockly from 'blockly';
 import {basicBlocks} from './blocks/basic';
 import {guiBlocks} from './blocks/gui';
 import {mathBlocks} from './blocks/math';
+import {builtInVars} from './blocks/builtInVars'
 import {ahkGen} from './codeGen/ahk';
 import {toolbox} from './toolbox';
 import './index.css';
@@ -10,6 +11,7 @@ import './index.css';
 Blockly.common.defineBlocks(basicBlocks);
 Blockly.common.defineBlocks(guiBlocks);
 Blockly.common.defineBlocks(mathBlocks);
+Blockly.common.defineBlocks(builtInVars);
 
 const codeDiv = document.getElementById('generatedCode').firstChild;
 const blocklyDiv = document.getElementById('blocklyDiv');

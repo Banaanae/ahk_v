@@ -1,33 +1,33 @@
 import * as Blockly from 'blockly';
 
 export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
-{
+{ // TODO: Combine all gui blocks and change block based on control
 	"type": "gui_add_text",
 	"message0": "Add text %1 At X %2 Y %3 Width %4 Height %5 and name it %6",
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_text_text"
+		"name": "text"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_text_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_text_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_text_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_text_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_text_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -43,27 +43,27 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_edit_text"
+		"name": "text"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_edit_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_edit_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_edit_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_edit_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_edit_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -76,35 +76,31 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   //Insert updown here
   {
 	"type": "gui_add_picture",
-	"message0": "Add picture %1 At X %2 Y %3 Width %4 Height %5 Path on hardrive %6 and name it %7",
+	"message0": "Add picture located at %1 At X %2 Y %3 Width %4 Height %5 and name it %6",
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_picture_text"
+		"name": "location"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_picture_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_picture_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_picture_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_picture_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_picture_path"
-	  },
-	  {
-		"type": "input_value",
-		"name": "gui_add_picture_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -120,27 +116,27 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_button_text"
+		"name": "text"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_button_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_button_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_button_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_button_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_button_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -156,27 +152,27 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_checkbox_text"
+		"name": "text"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_checkbox_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_checkbox_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_checkbox_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_checkbox_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_checkbox_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -192,27 +188,27 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_radio_text"
+		"name": "text"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_radio_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_radio_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_radio_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_radio_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_radio_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -228,28 +224,28 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_ddl_text",
+		"name": "text",
 		"check": "Array"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_ddl_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_ddl_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_ddl_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_ddl_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_ddl_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -265,28 +261,28 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_combobox_text",
+		"name": "text",
 		"check": "Array"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_combobox_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_combobox_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_combobox_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_combobox_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_combobox_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -302,28 +298,28 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_listbox_text",
+		"name": "text",
 		"check": "Array"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_listbox_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_listbox_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_listbox_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_listbox_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_listbox_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -336,31 +332,31 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   // Listview and Treeview and Link and Hotkey
   { // TODO: Remove %1 and add DDL instead
 	"type": "gui_add_datetime",
-	"message0": "Add date selector at %1 At X %2 Y %3 Width %4 Height %5 and name it %6",
+	"message0": "Add date selector %1 At X %2 Y %3 Width %4 Height %5 and name it %6",
 	"args0": [
 	  {
 		"type": "input_value",
-		"name": "gui_add_datetime_text"
+		"name": "text"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_datetime_x"
+		"name": "x"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_datetime_y"
+		"name": "y"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_datetime_w"
+		"name": "w"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_datetime_h"
+		"name": "h"
 	  },
 	  {
 		"type": "input_value",
-		"name": "gui_add_datetime_name"
+		"name": "name"
 	  }
 	],
 	"inputsInline": true,
@@ -370,19 +366,60 @@ export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
 	"tooltip": "Adds datetime",
 	"helpUrl": ""
   },
-  // ^ Options and MonthCal
-  // All Remaining ones
+  // MonthCal and Slider
+  {
+	"type": "gui_add_slider",
+	"message0": "Add slider %1 At X %2 Y %3 Width %4 Height %5 and name it %6",
+	"args0": [
+	  {
+		"type": "input_value",
+		"name": "text"
+	  },
+	  {
+		"type": "input_value",
+		"name": "x"
+	  },
+	  {
+		"type": "input_value",
+		"name": "y"
+	  },
+	  {
+		"type": "input_value",
+		"name": "w"
+	  },
+	  {
+		"type": "input_value",
+		"name": "h"
+	  },
+	  {
+		"type": "input_value",
+		"name": "name"
+	  }
+	],
+	"inputsInline": true,
+	"previousStatement": null,
+	"nextStatement": null,
+	"colour": 230,
+	"tooltip": "Adds datetime",
+	"helpUrl": ""
+  },
 {
 	"type": "gui_header",
-	"message0": "Gui %1",
+	"message0": "Gui %1 %2 %3",
 	"args0": [
 		{
 			"type": "field_input",
-			"name": "gui_input_name",
+			"name": "gui_header_name",
 			"text": "Name"
+		},
+		{
+			"type": "input_dummy",
+		},
+		{
+			"type": "input_statement",
+			"name": "gui_header_blocks"
 		}
 	],
-	"nextStatement": null,
 	"colour": 230,
 	"tooltip": "The starting block of the GUI, sets the name and position of the GUI",
 	"helpUrl": ""
