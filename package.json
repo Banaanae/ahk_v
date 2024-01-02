@@ -1,18 +1,20 @@
 {
   "name": "ahk_v",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "AutoHotKey turned into a visual langauge with Blockly ",
   "main": "index.js",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
-    "start": "webpack serve --open --mode development"
+    "start": "webpack serve --open --mode development",
+    "deploy": "gh-pages -d dist"
   },
   "author": "Banaanae",
   "license": "GPL-2.0",
   "devDependencies": {
     "css-loader": "^6.7.1",
+    "gh-pages": "^6.1.1",
     "html-webpack-plugin": "^5.5.0",
     "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.1",
