@@ -1,6 +1,6 @@
 import * as Blockly from 'blockly';
 
-export const mathBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
+export const math = Blockly.common.createBlockDefinitionsFromJsonArray([
     {
         "type": "math_round_cust",
         "message0": "Round to %1 decimal places %2",

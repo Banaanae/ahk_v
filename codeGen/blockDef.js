@@ -1,114 +1,49 @@
-import * as Blockly from 'blockly';
-
-export const ahkGen = new Blockly.Generator('AutoHotkey');
-
-const Order = {
-	ATOMIC: 0,
-	NONE: 99
-	// not exactly sure what values are needed
-	// TODO: Figure out what are needed and when to use
-	// START: 1,
-	// HOTKEYS: 5,
-	// FUNCS: 10,
-	// GUI: 15,
-}
+import {Order} from './ahkGen'
 
 //TODO: Merge similar block generators (e.g math_single and math_ round)
 
-// TODO: Some A_(...) listed here may not be readonly, but don't accept the input I tested with (1)
-ahkGen.addReservedWords( // TODO (med-prio): Complete list (classes & func)
-	// Keywords
-	'true,false' +
-	// Operators
-	'is,in,contains,not,and,or' +
-	// Misc
-	// https://autohotkey.com/docs/v2/Concepts.htm#names
-	'as,IsSet,super,unset' + 
-	// Declaration Keywords
-	'Break,Case,Catch,Continue,Else,Finally,For,Global,Goto,If,Local,Loop,Return,Static,Switch,Throw,Try,Until' + 
-	// Globals (readonly)
-	// https://gist.github.com/Banaanae/5dab1d0b5d523c2bae998ff0e18e92a5
-	// Special Chars & Script Properties
-	'A_Space,A_Tab,A_WorkingDir,A_InitialWorkingDir,A_ScriptDir,A_ScriptFullPath,A_ScriptHwnd,A_LineNumber,A_LineFile,A_ThisFunc,A_AhkVersion,A_AhkPath,A_IsCompiled' + 
-	// Date and Time
-	'A_YYYY,A_MM,A_DD,A_MMMM,A_MMM,A_DDDD,A_DDD,A_WDay,A_YDay,A_YWeek,A_Hour,A_Min,A_Sec,A_MSec,A_Now,A_NowUTC,A_TickCount' + 
-	// Script Settings
-	'A_IsSuspended,A_IsPaused,A_IsCritical,A_FileEncoding,A_SendMode,A_CoordModeToolTip,A_CoordModePixel,A_CoordModeMouse,A_CoordModeCaret,A_CoordModeMenu,A_RegView,A_TrayMenu,A_IconFile,A_IconNumber' + 
-	// User Idle Time
-	'A_TimeIdle,A_TimeIdlePhysical,A_TimeIdleKeyboard,A_TimeIdleMouse' + 
-	// Hotkeys, Hotstrings, and Custom Menu Items
-	'A_ThisHotkey,A_PriorHotkey,A_PriorKey,A_TimeSinceThisHotkey,A_TimeSincePriorHotkey,A_EndChar' + 
-	// Operating System and User Info
-	'A_ComSpec,A_Temp,A_OSVersion,A_Is64bitOS,A_PtrSize,A_Language,A_ComputerName,A_UserName,A_WinDir,A_ProgramFiles,A_AppData,A_AppDataCommon,A_Desktop,A_DesktopCommon,A_StartMenu,A_StartMenuCommon,A_Programs,A_ProgramsCommon,A_Startup,A_StartupCommon,A_MyDocuments,A_IsAdmin,A_ScreenWidth,A_ScreenHeight,A_ScreenDPI' + 
-	// Misc & Loop
-	'A_Cursor,A_LoopFileName,A_LoopRegName,A_LoopReadLine,A_IsCompiled,A_LoopField'
-)
-
-ahkGen.init = function(workspace) {
-    //_super.init.call(this, workspace);
-    this.PASS = this.INDENT + 'pass\n';
-    if (!this.nameDB_) {
-        this.nameDB_ = new Blockly.Names(this.RESERVED_WORDS_);
-    }
-    else {
-        this.nameDB_.reset();
-    }
-    this.nameDB_.setVariableMap(workspace.getVariableMap());
-    this.nameDB_.populateVariables(workspace);
-    this.nameDB_.populateProcedures(workspace);
-    var defvars = [];
-    // Add developer variables (not created or named by the user).
-    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-    for (var i = 0; i < devVarList.length; i++) {
-        defvars.push(this.nameDB_.getName(devVarList[i], Names.DEVELOPER_VARIABLE_TYPE) + ' = None');
-    }
-    // Add user variables, but only ones that are being used.
-    var variables = Blockly.Variables.allUsedVarModels(workspace);
-    for (var i = 0; i < variables.length; i++) {
-        defvars.push(this.getVariableName(variables[i].getId()) + ' = None');
-    }
-    this.definitions_['variables'] = defvars.join('\n');
-    this.isInitialized = true;
-}
-
-ahkGen.forBlock['a_special'] = 
-ahkGen.forBlock['a_property'] = 
-ahkGen.forBlock['a_time'] = 
-ahkGen.forBlock['a_settings'] = 
-ahkGen.forBlock['a_idle'] = 
-ahkGen.forBlock['a_hotkey'] = 
-ahkGen.forBlock['a_os'] = 
-ahkGen.forBlock['a_misc'] = 
-ahkGen.forBlock['a_loop'] = function(block, generator) {
+export const a_special = a_
+export const a_property = a_
+export const a_time = a_
+export const a_settings = a_
+export const a_idle = a_
+export const a_hotkey = a_
+export const a_os = a_
+export const a_misc = a_
+export const a_loop = a_
+function a_(block, generator) {
 	const value = block.getFieldValue('VALUE')
 	return [`A_${value}`, Order.ATOMIC]
 }
 
-ahkGen.forBlock['a_setbuiltin'] = function(block, generator) {
+export function a_setbuiltin(block, generator) {
 	const a_var = generator.valueToCode(block, 'a_var', Order.ATOMIC)
 	const a_to = generator.valueToCode(block, 'a_to', Order.ATOMIC)
 	if (a_var !== ahkGen.nameDB_.getName(a_var, Order.ATOMIC)) {
-		return `; Error: Variable "${a_var}" cannot be written to` // TODO: Warn instead of this 
+		block.setWarningText(`Variable "${a_var}" cannot be written to`)
+ 	} else {
+		block.setWarningText()
 	}
 	return `${a_var} := ${a_to}`
 }
 
-ahkGen.forBlock['controls_if'] = function(block, generator) { // Unfinished
+export function controls_if(block, generator) { // Unfinished
 	//const code = "if"
 	const statement_members = generator.statementToCode(block, 'DO')
 	return `if() {\n${statement_members}\n}`;
 }
 
-ahkGen.forBlock['controls_repeat_ext'] = function(block, generator) {
+export function controls_repeat_ext(block, generator) {
 	const times = generator.valueToCode(block, 'TIMES', Order.NONE)
 	const statement_members = generator.statementToCode(block, 'DO')
 	return `Loop(${times}) {\n${statement_members}\n}`
 }
 
-ahkGen.forBlock['gui_add_text'] = 
-ahkGen.forBlock['gui_add_edit'] = 
-ahkGen.forBlock['gui_add_picture'] = 
-ahkGen.forBlock['gui_add_button'] = function guiAdd(block, generator,) { // TODO: Fix identation
+export const gui_add_text = gui_add
+export const gui_add_edit = gui_add
+export const gui_add_picture = gui_add
+export const gui_add_button = gui_add
+function gui_add(block, generator,) { // TODO: Fix identation
 	const type = block.type
 	let text = generator.valueToCode(block, 'text', Order.ATOMIC)
 	const x = generator.valueToCode(block, 'x', Order.ATOMIC).parseGui('x', ' ')
@@ -122,14 +57,14 @@ ahkGen.forBlock['gui_add_button'] = function guiAdd(block, generator,) { // TODO
 	return `${name}PLACE-ME-IN-GUI-HEADER.Add("${type.replace(/.*_/g, '')}", "${x}${y}${w}${h}", ${text})`
 }
 
-ahkGen.forBlock['gui_header'] = function(block, generator) {
+export function gui_header(block, generator) {
 	const name = block.getFieldValue('gui_header_name');
 	const varName = ahkGen.nameDB_.getName(name.replace(/\W/g, ''), Order.ATOMIC);
 	const statement_members = generator.statementToCode(block, 'gui_header_blocks').replace(/^\s*(.*=\s*)?[\w-]*/gm, `$1${varName}`) // TODO: Find a better way of doing this
 	return `${varName} := Gui(, "${name}")\n${statement_members}` // TODO: Make regex not match empty line
 }
 
-ahkGen.forBlock['gui_show'] = function(block, generator) {
+export function gui_show(block, generator) {
 	const name = block.getFieldValue('gui_show_name').replace(/\W/g, '');
     const x = block.getFieldValue('gui_show_x').parseGui('x', ' ');
     const y = block.getFieldValue('gui_show_y').parseGui('y', ' ');
@@ -138,20 +73,20 @@ ahkGen.forBlock['gui_show'] = function(block, generator) {
     return `${name}.Show("${x}${y}${w}${h}")`;
 }
 
-ahkGen.forBlock['hotkey'] = function(block, generator) {
+export function hotkey(block, generator) {
 	const key = block.getFieldValue('hotkey_key');
 	const statement_members = generator.statementToCode(block, 'hotkey_blocks');
 	return `${key}:: {\n${statement_members}\n}`;
 }
 
-ahkGen.forBlock['logic_boolean'] = function(block, generator) {
+export function logic_boolean(block, generator) {
 	const code = block.getFieldValue('BOOL') === 'TRUE' ? 'true' : 'false';
 	return [code, Order.ATOMIC];
 }
 
-ahkGen.forBlock['logic_compare'] = 
-ahkGen.forBlock['logic_operation'] = 
-ahkGen.forBlock['math_arithmetic'] = function(block, generator) {
+export const logic_compare = math_arithmetic
+export const logic_operation = math_arithmetic
+export function math_arithmetic(block, generator) {
 	const arg0 = generator.valueToCode(block, 'A', Order.ATOMIC);
 	const arg1 = generator.valueToCode(block, 'B', Order.ATOMIC);
 	const operator = block.getFieldValue('OP');
@@ -174,7 +109,7 @@ ahkGen.forBlock['math_arithmetic'] = function(block, generator) {
 	return [`${arg0}${op}${arg1}`, Order.ATOMIC];
 }
 
-ahkGen.forBlock['math_atan2'] = function(block, generator) { // Unfinished
+export function math_atan2(block, generator) { // Unfinished
 	const x = generator.valueToCode(block, 'X', Order.ATOMIC)
 	const y = generator.valueToCode(block, 'Y', Order.ATOMIC)
 	// https://autohotkey.com/boards/viewtopic.php?f=76&t=62443&p=265992&sid=4c116fa52defc2001b2604bc4f542bfb#p265992
@@ -182,7 +117,7 @@ ahkGen.forBlock['math_atan2'] = function(block, generator) { // Unfinished
 	return x+y
 }
 
-ahkGen.forBlock['math_constant'] = function(block, generator) {
+export function math_constant(block, generator) {
 	const constant = block.getFieldValue('CONSTANT') // TODO: Defines variables at top then use down here
 	if (constant === 'PI') { // TODO (low-prio): Make switch
 		var code = 'ATan(1) * 4';
@@ -200,7 +135,7 @@ ahkGen.forBlock['math_constant'] = function(block, generator) {
 	return [code, Order.ATOMIC]
 }
 
-ahkGen.forBlock['math_constrain'] = function(block, generator) {
+export function math_constrain(block, generator) {
 	const number = generator.valueToCode(block, 'VALUE', Order.ATOMIC);
 	const low = generator.valueToCode(block, 'LOW', Order.ATOMIC);
 	const high = generator.valueToCode(block, 'HIGH', Order.ATOMIC);
@@ -208,17 +143,17 @@ ahkGen.forBlock['math_constrain'] = function(block, generator) {
 	return [code, Order.ATOMIC]
 }
 
-ahkGen.forBlock['math_modulo'] = function(block, generator) {
+export function math_modulo(block, generator) {
 	const dividend = generator.valueToCode(block, 'DIVIDEND', Order.ATOMIC);
     const divisor = generator.valueToCode(block, 'DIVISOR', Order.ATOMIC);
     return [`Mod(${dividend}, ${divisor})`, Order.ATOMIC]
 };
 
-ahkGen.forBlock['math_number'] = function(block, generator) {
+export function math_number(block, generator) {
 	return [String(block.getFieldValue('NUM')), Order.ATOMIC];
 };
 
-ahkGen.forBlock['math_number_property'] = function(block, generator) {
+export function math_number_property(block, generator) {
 	const prop = block.getFieldValue('PROPERTY')
 	const number = generator.valueToCode(block, 'NUMBER_TO_CHECK', Order.ATOMIC)
 	const divisor = generator.valueToCode(block, 'DIVISOR', Order.ATOMIC)
@@ -241,15 +176,15 @@ ahkGen.forBlock['math_number_property'] = function(block, generator) {
 	return [code, Order.ATOMIC]
 }
 
-ahkGen.forBlock['math_random_float'] = 
-ahkGen.forBlock['math_random_int'] = function(block, generator) {
+export const math_random_float = math_random_int
+export function math_random_int(block, generator) {
 	const min = generator.valueToCode(block, 'FROM', Order.ATOMIC);
 	const aMin = min === '' ? '' : `${min}, `
     const max = generator.valueToCode(block, 'TO', Order.ATOMIC);
     return [`Random(${aMin}${max})`, Order.ATOMIC]
 };
 
-ahkGen.forBlock['math_round'] = function(block, generator) {
+export function math_round(block, generator) {
 	const number = generator.valueToCode(block, 'NUM', Order.ATOMIC)
 	const roundType = block.getFieldValue('OP')
 	let round;
@@ -261,14 +196,14 @@ ahkGen.forBlock['math_round'] = function(block, generator) {
 	return [`${round}(${number})`, Order.ATOMIC]
 }
 
-ahkGen.forBlock['math_round_cust'] = function(block, generator) { // Custom version of math_round that supports rounding to N places
+export function math_round_cust(block, generator) { // Custom version of math_round that supports rounding to N places
 	const number = generator.valueToCode(block, 'math_round_cust_number', Order.ATOMIC)
 	const places = block.getFieldValue('math_round_cust_places')
 	return [`Round(${number}, ${places})`, Order.ATOMIC]
 }
 
-ahkGen.forBlock['math_single'] = 
-ahkGen.forBlock['math_trig'] = function(block, generator) {
+export const math_single = math_trig
+export function math_trig(block, generator) {
 	const number = generator.valueToCode(block, 'NUM', Order.ATOMIC)
 	const operator = block.getFieldValue('OP');
 	let code;
@@ -301,8 +236,8 @@ ahkGen.forBlock['math_trig'] = function(block, generator) {
 	} 
 	return [code, Order.ATOMIC];
 };
-ahkGen.forBlock['msgbox_simple'] = 
-ahkGen.forBlock['msgbox'] = function(block, generator) { // TODO (low prio): Fix spacing issue
+export const msgbox_simple = msgbox
+export function msgbox(block, generator) { // TODO (low prio): Fix spacing issue
 	const body = generator.valueToCode(block, 'msgbox_body', Order.ATOMIC)
 	if (block.type === "msgbox_simple") {
 		return `MsgBox(${body})`
@@ -319,8 +254,8 @@ ahkGen.forBlock['msgbox'] = function(block, generator) { // TODO (low prio): Fix
 	return `MsgBox(${body}, ${title}, "${buttons}${icon}${defaultBtn}${modal}${other}")`;
 }
 
-ahkGen.forBlock['procedures_defreturn'] = 
-ahkGen.forBlock['procedures_defnoreturn'] = function(block, generator) {
+export const procedures_defreturn = procedures_defnoreturn
+export function procedures_defnoreturn(block, generator) {
 	const funcName = block.getFieldValue('NAME').replace(/\W/g, '');
 	var args = [];
 	var variables = block.getVars();
@@ -333,34 +268,39 @@ ahkGen.forBlock['procedures_defnoreturn'] = function(block, generator) {
     return `${funcName}(${args.join(', ')}) {\n${statement_members}${returned}\n}`;
 };
 
-ahkGen.forBlock['procedures_ifreturn'] = function(block, generator) {
+export function procedures_ifreturn(block, generator) {
 	const ifVal = generator.valueToCode(block, 'CONDITION', Order.ATOMIC)
 	const returnVal = 'return ' + generator.valueToCode(block, 'VALUE', Order.ATOMIC)
 	return `If (${ifVal}) ${returnVal}`
 };
 
-ahkGen.forBlock['singleinstance'] = function(block, generator) {
+export function singleinstance(block, generator) {
 	const type = block.getFieldValue('singleinstance_type').replace(/.*_/g, '')
     return `#SingleInstance ${type}`;
 };
 
-ahkGen.forBlock['send'] = function(block, generator) {
-	var keys = generator.valueToCode(block, 'send_keys', Order.ATOMIC);
+export function send(block, generator) {
+	const keys = generator.valueToCode(block, 'send_keys', Order.ATOMIC);
     return `Send(${keys})`;
 };
 
-ahkGen.forBlock['sleep'] = function(block, generator) {
-	var delay = generator.valueToCode(block, 'sleep_delay', Order.ATOMIC);
+export function sendmode(block, generator) {
+	const mode = block.getFieldValue('sendmode_type');
+    return `SendMode("${mode}")`;
+};
+
+export function sleep(block, generator) {
+	const delay = generator.valueToCode(block, 'sleep_delay', Order.ATOMIC);
 	return `Sleep(${delay})`;
 };
 
-ahkGen.forBlock['text'] = function(block, generator) {
+export function text(block, generator) {
 	const textValue = block.getFieldValue('TEXT');
 	return [`"${textValue}"`, Order.ATOMIC];
 };
 
-ahkGen.forBlock['text_changeCase'] = 
-ahkGen.forBlock['text_length'] = function(block, generator) { // TODO: Doesn't work when change then length
+export const text_changeCase = text_length
+export function text_length(block, generator) { // TODO: Doesn't work when change then length
 	const text = generator.valueToCode(block, 'TEXT', Order.NONE)
 	let modifier;
 	if (block.type === 'text_changeCase') {
@@ -371,7 +311,7 @@ ahkGen.forBlock['text_length'] = function(block, generator) { // TODO: Doesn't w
 	return [`Str${modifier.toTitleCase()}(${text})`, Order.ATOMIC]
 }
 
-ahkGen.forBlock['text_charAt'] = function(block, generator) {
+export function text_charAt(block, generator) {
 	const locType = block.getFieldValue('WHERE')
 	const text = generator.valueToCode(block, 'VALUE', Order.NONE)
 	const at = generator.valueToCode(block, 'AT', Order.NONE)
@@ -390,7 +330,19 @@ ahkGen.forBlock['text_charAt'] = function(block, generator) {
 	return [code, Order.ATOMIC]
 }
 
-ahkGen.forBlock['text_getSubstring'] = function(block, generator) { // TODO: Fix commas
+export function text_count(block, generator) {
+	const needle = generator.valueToCode(block, 'SUB', Order.ATOMIC)
+	const haystack = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
+	const func = generator.provideFunction_('StrCount', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(needle, haystack) {
+  StrReplace(haystack, needle,,, &count)
+  return count
+}`) // TODO: Put functions at bottom
+	const code = func + `(${needle}, ${haystack})`
+	return [code, Order.FUNCTION_CALL]
+}
+
+export function text_getSubstring(block, generator) { // TODO: Fix commas
 	const text = generator.valueToCode(block, 'STRING', Order.NONE)
 	const locType1 = block.getFieldValue('WHERE1')
 	const locType2 = block.getFieldValue('WHERE2')
@@ -415,7 +367,7 @@ ahkGen.forBlock['text_getSubstring'] = function(block, generator) { // TODO: Fix
 	return [`SubStr(${text}, ${start}${length})`, Order.ATOMIC]
 }
 
-ahkGen.forBlock['text_indexOf'] = function(block, generator) { // TODO: Second block with all InStr options
+export function text_indexOf(block, generator) { // TODO: Second block with all InStr options
 	const haystack = generator.valueToCode(block, 'VALUE', Order.ATOMIC)
 	const needle = ', ' + generator.valueToCode(block, 'FIND', Order.ATOMIC)
 	const position = block.getFieldValue('END') === "FIRST" ? "" : ",,, -1"
@@ -423,12 +375,12 @@ ahkGen.forBlock['text_indexOf'] = function(block, generator) { // TODO: Second b
 	return [code, Order.ATOMIC]
 }
 
-ahkGen.forBlock['text_isEmpty'] = function(block, generator) {
+export function text_isEmpty(block, generator) {
 	const text = generator.valueToCode(block, 'VALUE', Order.ATOMIC)
-	return [`(!StrLen(${text}))`]
+	return [`(!StrLen(${text}))`, Order.ATOMIC]
 }
 
-ahkGen.forBlock['text_join'] = function(block, generator) {
+export function text_join(block, generator) {
 	const values = [];
 	for (let i = 0; i < block.itemCount_; i++) {
 		const texts = generator.valueToCode(block, 'ADD' + i, Order.ATOMIC);
@@ -440,29 +392,53 @@ ahkGen.forBlock['text_join'] = function(block, generator) {
     return [concat, Order.ATOMIC]
 };
 
-ahkGen.forBlock['text_multiline'] = function(block, generator) {
+export function text_multiline(block, generator) {
 	const text = block.getFieldValue('TEXT').replace(/\n/g, '`n');
 	return [`"${text}"`, Order.ATOMIC]
 }
 
-ahkGen.forBlock['variables_get'] = function(block, generator) {
-	const varName = ahkGen.nameDB_.getName(block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME);
+export function text_prompt_ext(block, generator) {
+	const text = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
+	const type = block.getFieldValue('TYPE')
+	return [`InputBox(${text})`, Order.ATOMIC] // TODO: Use type
+}
+
+export function text_replace(block, generator) { // TODO: Custom with all options
+	const needle = generator.valueToCode(block, 'FROM', Order.ATOMIC)
+	const replace = generator.valueToCode(block, 'TO', Order.ATOMIC)
+	const haystack = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
+	return [`StrReplace(${haystack}, ${needle}, ${replace})`] // TODO: Fix optional param's comma
+}
+
+export const text_trim = text_trim_cust
+export function text_trim_cust(block, generator) {
+	const text = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
+	const mode = block.getFieldValue('MODE')
+	let type;
+	switch(mode) {
+		case 'LEFT': type = 'L'; break;
+		case 'RIGHT': type = 'R'; break;
+		case 'BOTH': type = ''
+	}
+	let trim;
+	if (block.type === 'text_trim_cust') {
+		trim = ', ' + generator.valueToCode(block, 'TRIM', Order.ATOMIC)
+	} else {
+		trim = ''
+	}
+	return [`${type}Trim(${text}${trim})`, Order.ATOMIC]
+}
+
+export function variables_get(block, generator) {
+	const varName = ahkGen.nameDB_.getName(block.getFieldValue('VAR'), Order.ATOMIC); // Blockly.VARIABLE_CATEGORY_NAME
     return [varName, Order.ATOMIC]
 };
 
 
-ahkGen.forBlock['variables_set'] = function(block, generator) {
+export function variables_set(block, generator) {
 	const argument0 = ahkGen.valueToCode(block, 'VALUE', Order.NONE) || '0';
 	const varName = generator.getVariableName(block.getFieldValue('VAR'))
 	return `${varName} := ${argument0}`;
-};
-
-ahkGen.scrub_ = function(block, code, thisOnly) {
-	const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
-	if (nextBlock && !thisOnly) {
-		return code + '\n' + ahkGen.blockToCode(nextBlock);
-	}
-	return code;
 };
 
 String.prototype.parseGui = function(prefix, suffix) {

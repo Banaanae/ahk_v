@@ -1,6 +1,6 @@
 import * as Blockly from 'blockly';
 
-export const guiBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
+export const gui = Blockly.common.createBlockDefinitionsFromJsonArray([
 { // TODO: Combine all gui blocks and change block based on control
 	"type": "gui_add_text",
 	"message0": "Add text %1 At X %2 Y %3 Width %4 Height %5 and name it %6",

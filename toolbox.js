@@ -1,35 +1,23 @@
 //https://gist.githubusercontent.com/alschmiedt/2085af32381db89d1f1ca80d5883c0d5/raw/20719c233061ec612af9efb29df6debc658763a9/gistfile1.txt
+import '@blockly/toolbox-search';
+
 export const toolbox = {
 	"kind": "categoryToolbox",
 	"contents": [
-		{
-			"kind": "category",
-			"name": "Basics",
-			"contents": [
-				{
-					"kind": "block",
-					"type": "hotkey"
-				},
-				{
+        {
+            "kind": "category",
+            "name": "Setup",
+            "contents": [
+                {
 					"kind": "block",
 					"type": "singleinstance"
 				},
-				{
-					"kind": "block",
-					"type": "controls_if"
-				},
-				{
-					"kind": "block",
-					"type": "text"
-				},
-				{
-					"kind": "block",
-					"type": "math_number"
-				},
-				{
-					"kind": "block",
-					"type": "send"
-				},
+            ]
+        },
+        {
+			"kind": "category",
+			"name": "Script",
+			"contents": [
 				{
 					"kind": "block",
 					"type": "sleep"
@@ -42,28 +30,40 @@ export const toolbox = {
                     "kind": "block",
                     "type": "msgbox"
                 },
-				{
-                    "kind": "block",
-                    "type": "logic_compare"
-                },
-                {
-                    "kind": "block",
-                    "type": "logic_operation"
-                },
-                {
-                    "kind": "block",
-                    "type": "logic_negate"
-                },
-                {
-                    "kind": "block",
-                    "type": "logic_boolean"
-                }
 			],
 		},
+        {
+            "kind": "category",
+            "name": "Mouse and Keyboard",
+            "contents": [
+                {
+					"kind": "block",
+					"type": "send"
+				},
+                {
+                    "kind": "block",
+                    "type": "sendmode"
+                }
+            ]
+        },
+        {
+            "kind": "category",
+            "name": "Hotkeys",
+            "contents": [
+                {
+					"kind": "block",
+					"type": "hotkey"
+				},
+            ]
+        },
 		{
             "kind": "category",
             "name": "Text",
             "contents": [
+                {
+					"kind": "block",
+					"type": "text"
+				},
                 {
                     "kind": "block",
                     "type": "text_multiline"
@@ -107,6 +107,10 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "text_trim"
+                },
+                {
+                    "kind": "block",
+                    "type": "text_trim_cust"
                 },
                 {
                     "kind": "block",
@@ -176,6 +180,10 @@ export const toolbox = {
 			"kind": "category",
 			"name": "Math",
             "contents": [
+                {
+					"kind": "block",
+					"type": "math_number"
+				},
 				{
                     "kind": "block",
                     "type": "math_arithmetic"
@@ -234,6 +242,26 @@ export const toolbox = {
             "kind": "category",
             "name": "Logic and Loops",
             "contents": [
+                {
+					"kind": "block",
+					"type": "controls_if"
+				},
+				{
+                    "kind": "block",
+                    "type": "logic_compare"
+                },
+                {
+                    "kind": "block",
+                    "type": "logic_operation"
+                },
+                {
+                    "kind": "block",
+                    "type": "logic_negate"
+                },
+                {
+                    "kind": "block",
+                    "type": "logic_boolean"
+                },
                 {
                     "kind": "block",
                     "type": "logic_ternary"
@@ -400,6 +428,11 @@ export const toolbox = {
 		{
 			"kind": "sep"
 		},
+        {
+            'kind': 'search',
+            'name': 'Search',
+            'contents': [],
+        },
 		{
 			"kind": "category",
 			"name": "Old",
