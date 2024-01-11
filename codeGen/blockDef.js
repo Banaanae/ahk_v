@@ -109,12 +109,17 @@ export function math_arithmetic(block, generator) {
 	return [`${arg0}${op}${arg1}`, Order.ATOMIC];
 }
 
-export function math_atan2(block, generator) { // Unfinished
+export function math_atan2(block, generator) {
 	const x = generator.valueToCode(block, 'X', Order.ATOMIC)
 	const y = generator.valueToCode(block, 'Y', Order.ATOMIC)
-	// https://autohotkey.com/boards/viewtopic.php?f=76&t=62443&p=265992&sid=4c116fa52defc2001b2604bc4f542bfb#p265992
-	const code = `atan(y/x)+4*atan((x<0)*(y>0)-(y<0))`
-	return x+y
+	// https://www.autohotkey.com/boards/viewtopic.php?f=76&t=62443&p=265992&sid=4c116fa52defc2001b2604bc4f542bfb#p265922
+	const func = generator.provideFunction_('ATan2', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(y, x) {
+  return DllCall("msvcrt\\atan2", "Double", y, "Double", x, "CDECL Double")
+}
+	`)
+	const code = func + `(${y}, ${x})`
+	return [code, Order.FUNCTION_CALL]
 }
 
 export function math_constant(block, generator) {
@@ -408,6 +413,18 @@ export function text_replace(block, generator) { // TODO: Custom with all option
 	const replace = generator.valueToCode(block, 'TO', Order.ATOMIC)
 	const haystack = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
 	return [`StrReplace(${haystack}, ${needle}, ${replace})`] // TODO: Fix optional param's comma
+}
+
+export function text_reverse(block, generator) {
+	const text = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
+	const func = generator.provideFunction_('StrReverse', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(str) {
+  DllCall("msvcrt.dll\\_wcsrev", "Str", $str, "CDECL")
+  return str
+}
+	`) // TODO: Find dllcall source
+	const code = func + `(${text})`
+	return [code, Order.FUNCTION_CALL]
 }
 
 export const text_trim = text_trim_cust
