@@ -19,7 +19,7 @@ function a_(block, generator) {
 export function a_setbuiltin(block, generator) {
 	const a_var = generator.valueToCode(block, 'a_var', Order.ATOMIC)
 	const a_to = generator.valueToCode(block, 'a_to', Order.ATOMIC)
-	if (a_var !== ahkGen.nameDB_.getName(a_var, Order.ATOMIC)) {
+	if (a_var !== generator.getVariableName(a_var)) {
 		block.setWarningText(`Variable "${a_var}" cannot be written to`)
  	} else {
 		block.setWarningText()
@@ -59,7 +59,7 @@ function gui_add(block, generator,) { // TODO: Fix identation
 
 export function gui_header(block, generator) {
 	const name = block.getFieldValue('gui_header_name');
-	const varName = ahkGen.nameDB_.getName(name.replace(/\W/g, ''), Order.ATOMIC);
+	const varName = generator.getVariableName(name.replace(/\W/g, ''));
 	const statement_members = generator.statementToCode(block, 'gui_header_blocks').replace(/^\s*(.*=\s*)?[\w-]*/gm, `$1${varName}`) // TODO: Find a better way of doing this
 	return `${varName} := Gui(, "${name}")\n${statement_members}` // TODO: Make regex not match empty line
 }
@@ -265,7 +265,7 @@ export function procedures_defnoreturn(block, generator) {
 	var args = [];
 	var variables = block.getVars();
 	for (var i = 0; i < variables.length; i++) {
-		args[i] = ahkGen.nameDB_.getName(variables[i], Order.ATOMIC);
+		args[i] = generator.getVariableName(variables[i]);
 	} // TODO: Is (ParamName*2*) normal
 	const statement_members = generator.statementToCode(block, 'STACK', true);
 	const returnVal = generator.valueToCode(block, 'RETURN', Order.NONE) // TODO: No return for block procedures_defnoreturn
@@ -447,13 +447,13 @@ export function text_trim_cust(block, generator) {
 }
 
 export function variables_get(block, generator) {
-	const varName = ahkGen.nameDB_.getName(block.getFieldValue('VAR'), Order.ATOMIC); // Blockly.VARIABLE_CATEGORY_NAME
+	const varName = generator.getVariableName(block.getFieldValue('VAR')); // Blockly.VARIABLE_CATEGORY_NAME
     return [varName, Order.ATOMIC]
 };
 
 
 export function variables_set(block, generator) {
-	const argument0 = ahkGen.valueToCode(block, 'VALUE', Order.NONE) || '0';
+	const argument0 = generator.valueToCode(block, 'VALUE', Order.NONE) || '0';
 	const varName = generator.getVariableName(block.getFieldValue('VAR'))
 	return `${varName} := ${argument0}`;
 };
