@@ -12,7 +12,7 @@ It is currently quite early in development, but many simpler blocks and math fun
 - - [ ] Gui Options
 - [ ] Wiki for each saying what it does + examples
 - [ ] Standard colouring
-- [ ] Better categories (Sort and dupelicate some blocks into multiple categories)
+- [X] Better categories (Sort and duplicate some blocks into multiple categories)
 - [ ] Add shadow blocks
 
 

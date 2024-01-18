@@ -12,7 +12,10 @@
 				<div id="output"></div><br>
 				<button onclick="navigator.clipboard.writeText(document.querySelector('#generatedCode > code:nth-child(1)').innerHTML.replace(/<br>/g, '\n'))">Copy code</button>
 				<button onclick="let blob=new Blob([document.querySelector('#generatedCode > code:nth-child(1)').innerHTML.replace(/<br>/g, '\n')],{type:'text/plain'}),link=document.createElement('a');link.href=window.URL.createObjectURL(blob),link.download='My Script.ahk',document.body.appendChild(link),link.click(),document.body.removeChild(link);">Download Script</button>
+				<!-- TODO: Make dev and user html files, user excludes below  -->
 				<button onclick="localStorage.removeItem('ahk_v'); window.location.href = ''">Clear local storage</button>
+				<button onclick="window.localStorage.ahk_v = window.prompt('Enter JSON'); window.location.href = ''">Import JSON</button>
+				<button onclick="document.querySelector('#generatedCode > code:nth-child(1)').innerHTML = window.localStorage.ahk_v ">Export JSON</button>
 			</div>
 		</div>
 	</body>

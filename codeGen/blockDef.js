@@ -28,15 +28,39 @@ export function a_setbuiltin(block, generator) {
 }
 
 export function controls_if(block, generator) { // Unfinished
-	//const code = "if"
 	const statement_members = generator.statementToCode(block, 'DO')
-	return `if() {\n${statement_members}\n}`;
+	// var args = [];
+	// var variables = block.getVars();
+	// for (var i = 0; i < variables.length; i++) {
+	// 	args[i] = generator.getVariableName(variables[i]);
+	// }
+	//const ifElseCount = block.
+	//console.log(ifElseCount)
+	const elseBlocks = generator.statementToCode(block, 'ELSE', Order.ATOMIC)
+	const isElse = elseBlocks === '' ? '' : ` else {\n${elseBlocks}\n}`;
+	const code = `if() {\n${statement_members}\n}${isElse}`
+	return code
 }
 
 export function controls_repeat_ext(block, generator) {
 	const times = generator.valueToCode(block, 'TIMES', Order.NONE)
 	const statement_members = generator.statementToCode(block, 'DO')
 	return `Loop(${times}) {\n${statement_members}\n}`
+}
+
+export function controls_whileUntil(block, generator) {
+	const mode = block.getFieldValue('MODE') === 'WHILE' ? 'While' : 'Loop'
+	let condition = generator.valueToCode(block, 'BOOL', Order.ATOMIC)
+	let until;
+	if (mode == 'Loop') {
+		until = ' Until ' + condition
+		condition = ''
+	} else {
+		until = ''
+	}
+	const statement_members = generator.statementToCode(block, 'DO', Order.ATOMIC)
+	const code = `${mode}(${condition}) {\n${statement_members}\n}${until}`
+	return code
 }
 
 export const gui_add_text = gui_add
@@ -77,6 +101,18 @@ export function hotkey(block, generator) {
 	const key = block.getFieldValue('hotkey_key');
 	const statement_members = generator.statementToCode(block, 'hotkey_blocks');
 	return `${key}:: {\n${statement_members}\n}`;
+}
+
+export function lists_create_with(block, generator) {
+	const listItems = []
+	for (let i = 0; i < block.itemCount_; i++) {
+		const texts = generator.valueToCode(block, 'ADD' + i, Order.ATOMIC);
+		if (texts) {
+			listItems.push(texts);
+		}
+	}
+	const array = listItems.join(', ')
+    return [`[${array}]`, Order.ATOMIC]
 }
 
 export function logic_boolean(block, generator) {
@@ -157,28 +193,47 @@ export function math_modulo(block, generator) {
 export function math_number(block, generator) {
 	return [String(block.getFieldValue('NUM')), Order.ATOMIC];
 };
-
+//https://www.autohotkey.com/boards/viewtopic.php?t=75586
 export function math_number_property(block, generator) {
 	const prop = block.getFieldValue('PROPERTY')
 	const number = generator.valueToCode(block, 'NUMBER_TO_CHECK', Order.ATOMIC)
 	const divisor = generator.valueToCode(block, 'DIVISOR', Order.ATOMIC)
 	let code;
-	if (prop === 'EVEN') { // TODO (low-prio): Make switch
-		code = `(Mod(${number}, 2) == 0)`
-	} else if (prop === 'ODD') {
-		code = `(Mod(${number}, 2) != 0)`
-	} else if (prop === 'PRIME') {
-		code = '; TODO: Prime'
-	} else if (prop == 'WHOLE') {
-		code = `(${number} == Floor(${number}))`
-	} else if (prop === 'POSITIVE') {
-		code = `(${number} == Abs(${number}))`
-	} else if (prop === 'NEGATIVE') {
-		code = `(${number} != Abs(${number}))`
-	} else {
-		code = `(Mod(${number}, ${divisor}) == 0)`
+	switch(prop) {
+		case 'EVEN': code = `(Mod(${number}, 2) == 0)`; break;
+		case 'ODD': code = `(Mod(${number}, 2) != 0)`; break;
+		case 'WHOLE': code = `(${number} == Floor(${number}))`; break;
+		case 'POSITIVE': code = `(${number} == Abs(${number}))`; break;
+		case 'NEGATIVE': code = `(${number} != Abs(${number}))`; break;
+		case 'DIVISIBLE_BY': code = `(Mod(${number}, ${divisor}) == 0)`
+	}
+	if (prop === 'PRIME') {
+		const func = generator.provideFunction_('Prime', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(n) {
+  Loop Floor(Sqrt(n)) -1 {
+    If !Mod(n, A_Index + 1)
+      Return false
+  }
+  Return true
+}`)
+		return [func + `(${number})`, Order.FUNCTION_CALL]
 	}
 	return [code, Order.ATOMIC]
+}
+
+export function math_on_list(block, generator) { // Unfinished
+	const list = generator.valueToCode(block, 'LIST', Order.ATOMIC)
+	const op = block.getFieldValue('OP')
+	let code;
+	if (op === 'RANDOM') {
+		const func = generator.provideFunction_('ArrayRandom', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(list) {
+  randomItem := list[Random(1, list.Length)]
+  return randomItem
+}`)
+	code = func + `(${list})`
+	}
+	return [op +'\n'+code, Order.FUNCTION_CALL]
 }
 
 export const math_random_float = math_random_int
@@ -266,7 +321,7 @@ export function procedures_defnoreturn(block, generator) {
 	var variables = block.getVars();
 	for (var i = 0; i < variables.length; i++) {
 		args[i] = generator.getVariableName(variables[i]);
-	} // TODO: Is (ParamName*2*) normal
+	}
 	const statement_members = generator.statementToCode(block, 'STACK', true);
 	const returnVal = generator.valueToCode(block, 'RETURN', Order.NONE) // TODO: No return for block procedures_defnoreturn
 	const returned = returnVal !== undefined ? `\n${generator.INDENT}return ${returnVal}` : ''
@@ -321,16 +376,12 @@ export function text_charAt(block, generator) {
 	const text = generator.valueToCode(block, 'VALUE', Order.NONE)
 	const at = generator.valueToCode(block, 'AT', Order.NONE)
 	let code;
-	if (locType === 'FROM_START') {
-		code = `SubStr(${text}, ${at}, 1)`
-	} else if (locType === 'FROM_END') {
-		code = `SubStr(${text}, ${-Math.abs(at)}, 1)`
-	} else if (locType === 'FIRST') {
-		code = `SubStr(${text}, 1, 1)`
-	} else if (locType === 'LAST') {
-		code = `SubStr(${text}, StrLen(${text}), 1)`
-	} else {
-		code = `SubStr(${text}, Random(StrLen(${text})), 1)`
+	switch(locType) {
+		case 'FROM_START': code = `SubStr(${text}, ${at}, 1)`
+		case 'FROM_END': code = `SubStr(${text}, ${-Math.abs(at)}, 1)`
+		case 'FIRST': code = `SubStr(${text}, 1, 1)`
+		case 'LAST': code = `SubStr(${text}, StrLen(${text}), 1)`
+		case 'RANDOM': code = `SubStr(${text}, Random(StrLen(${text})), 1)`
 	}
 	return [code, Order.ATOMIC]
 }
@@ -342,7 +393,7 @@ export function text_count(block, generator) {
 ${generator.FUNCTION_NAME_PLACEHOLDER_}(needle, haystack) {
   StrReplace(haystack, needle,,, &count)
   return count
-}`) // TODO: Put functions at bottom
+}`)
 	const code = func + `(${needle}, ${haystack})`
 	return [code, Order.FUNCTION_CALL]
 }
