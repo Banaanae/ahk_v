@@ -23,8 +23,41 @@ export function a_setbuiltin(block, generator) {
 		block.setWarningText(`Variable "${a_var}" cannot be written to`)
  	} else {
 		block.setWarningText()
+		return `${a_var} := ${a_to}`
 	}
-	return `${a_var} := ${a_to}`
+	return ""
+}
+
+export function colour_picker(block, generator) {
+	const colour = block.getFieldValue('COLOUR')
+	return colour
+}
+
+export function colour_random(block, generator) {
+	const func = generator.provideFunction_('randomColour', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}() {	
+  decimal := Random(16777215)
+  hex := StrUpper(Format("{1:x}", decimal))
+  colour := Format("#{:06}", hex)
+  return colour
+}`)
+	const code = func + '()'
+	return [code, Order.FUNCTION_CALL]
+}
+
+export function colour_rgb(block, generator) { // TODO: Limit to 100
+	const r = generator.valueToCode(block, 'RED', Order.ATOMIC)
+	const g = generator.valueToCode(block, 'GREEN', Order.ATOMIC)
+	const b = generator.valueToCode(block, 'BLUE', Order.ATOMIC)
+	const func = generator.provideFunction_('combineRGB', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(r := 0, g := 0, b := 0) {
+  colour .= Format("#{:02}", Format("{1:x}", Round(r *= 2.55)))
+  colour .= Format("{:02}", Format("{1:x}", Round(g *= 2.55)))
+  colour .= Format("{:02}", Format("{1:x}", Round(b *= 2.55)))
+  return colour
+}`)
+	const code = func + `(${r}, ${g}, ${b})`
+	return [code, Order.FUNCTION_CALL]
 }
 
 export function controls_if(block, generator) { // Unfinished
@@ -70,11 +103,11 @@ export const gui_add_button = gui_add
 function gui_add(block, generator,) { // TODO: Fix identation
 	const type = block.type
 	let text = generator.valueToCode(block, 'text', Order.ATOMIC)
-	const x = generator.valueToCode(block, 'x', Order.ATOMIC).parseGui('x', ' ')
-	const y = generator.valueToCode(block, 'y', Order.ATOMIC).parseGui('y', ' ')
-	const w = generator.valueToCode(block, 'w', Order.ATOMIC).parseGui('w', ' ')
-	const h = generator.valueToCode(block, 'h', Order.ATOMIC).parseGui('h')
-	const name = generator.valueToCode(block, 'name', Order.ATOMIC).replace(/\W/g, '').parseGui('', ' := ')
+	const x = generator.valueToCode(block, 'x', Order.ATOMIC).addXFix('x', ' ')
+	const y = generator.valueToCode(block, 'y', Order.ATOMIC).addXFix('y', ' ')
+	const w = generator.valueToCode(block, 'w', Order.ATOMIC).addXFix('w', ' ')
+	const h = generator.valueToCode(block, 'h', Order.ATOMIC).addXFix('h')
+	const name = generator.valueToCode(block, 'name', Order.ATOMIC).replace(/\W/g, '').addXFix('', ' := ')
 	if (block.type === 'gui_add_picture') {
 		text = generator.valueToCode(block, 'location', Order.ATOMIC)
 	}
@@ -90,10 +123,10 @@ export function gui_header(block, generator) {
 
 export function gui_show(block, generator) {
 	const name = block.getFieldValue('gui_show_name').replace(/\W/g, '');
-    const x = block.getFieldValue('gui_show_x').parseGui('x', ' ');
-    const y = block.getFieldValue('gui_show_y').parseGui('y', ' ');
-    const w = block.getFieldValue('gui_show_w').parseGui('w', ' ');
-    const h = block.getFieldValue('gui_show_h').parseGui('h');
+    const x = block.getFieldValue('gui_show_x').addXFix('x', ' ');
+    const y = block.getFieldValue('gui_show_y').addXFix('y', ' ');
+    const w = block.getFieldValue('gui_show_w').addXFix('w', ' ');
+    const h = block.getFieldValue('gui_show_h').addXFix('h');
     return `${name}.Show("${x}${y}${w}${h}")`;
 }
 
@@ -296,6 +329,7 @@ export function math_trig(block, generator) {
 	} 
 	return [code, Order.ATOMIC];
 };
+
 export const msgbox_simple = msgbox
 export function msgbox(block, generator) { // TODO (low prio): Fix spacing issue
 	const body = generator.valueToCode(block, 'msgbox_body', Order.ATOMIC)
@@ -312,6 +346,14 @@ export function msgbox(block, generator) { // TODO (low prio): Fix spacing issue
 	const other3 = block.getFieldValue('msgbox_other_1048576') === 'TRUE' ? 1048576 : 0 // RtL
 	const other = other1 + other2 + other3
 	return `MsgBox(${body}, ${title}, "${buttons}${icon}${defaultBtn}${modal}${other}")`;
+}
+
+export function notrayicon(block, generator) {
+	return `#NoTrayIcon`
+}
+
+export function persistent(block, generator) {
+	return `Persistent`
 }
 
 export const procedures_defreturn = procedures_defnoreturn
@@ -359,6 +401,12 @@ export function text(block, generator) {
 	return [`"${textValue}"`, Order.ATOMIC];
 };
 
+export function text_append(block, generator) {
+	const varName = generator.getVariableName(block.getFieldValue('VAR'))
+	const text = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
+	return varName + " .= " +  text
+}
+
 export const text_changeCase = text_length
 export function text_length(block, generator) { // TODO: Doesn't work when change then length
 	const text = generator.valueToCode(block, 'TEXT', Order.NONE)
@@ -377,10 +425,10 @@ export function text_charAt(block, generator) {
 	const at = generator.valueToCode(block, 'AT', Order.NONE)
 	let code;
 	switch(locType) {
-		case 'FROM_START': code = `SubStr(${text}, ${at}, 1)`
-		case 'FROM_END': code = `SubStr(${text}, ${-Math.abs(at)}, 1)`
-		case 'FIRST': code = `SubStr(${text}, 1, 1)`
-		case 'LAST': code = `SubStr(${text}, StrLen(${text}), 1)`
+		case 'FROM_START': code = `SubStr(${text}, ${at}, 1)`; break;
+		case 'FROM_END': code = `SubStr(${text}, ${-Math.abs(at)}, 1)`; break;
+		case 'FIRST': code = `SubStr(${text}, 1, 1)`; break;
+		case 'LAST': code = `SubStr(${text}, StrLen(${text}), 1)`; break;
 		case 'RANDOM': code = `SubStr(${text}, Random(StrLen(${text})), 1)`
 	}
 	return [code, Order.ATOMIC]
@@ -470,7 +518,7 @@ export function text_reverse(block, generator) {
 	const text = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
 	const func = generator.provideFunction_('StrReverse', `
 ${generator.FUNCTION_NAME_PLACEHOLDER_}(str) {
-  DllCall("msvcrt.dll\\_wcsrev", "Str", $str, "CDECL")
+  DllCall("msvcrt.dll\\_wcsrev", "Str", &str, "CDECL")
   return str
 }
 	`) // TODO: Find dllcall source
@@ -498,7 +546,7 @@ export function text_trim_cust(block, generator) {
 }
 
 export function variables_get(block, generator) {
-	const varName = generator.getVariableName(block.getFieldValue('VAR')); // Blockly.VARIABLE_CATEGORY_NAME
+	const varName = generator.getVariableName(block.getFieldValue('VAR'));
     return [varName, Order.ATOMIC]
 };
 
@@ -509,16 +557,124 @@ export function variables_set(block, generator) {
 	return `${varName} := ${argument0}`;
 };
 
-String.prototype.parseGui = function(prefix, suffix) {
-	if (prefix === undefined) prefix = ""
-	if (suffix === undefined) suffix = ""
-	if (this.valueOf() !== "") {
-		return prefix + this.valueOf() + suffix
-	} else {
-		return ""
+// TODO: For loop?
+export const window_activate = window
+export const window_activatebottom = window
+export const window_active = window
+export const window_close = window
+export const window_exist = window
+export const window_getclass = window
+export const window_getclientpos = window
+export const window_getcontrols = window
+export const window_getcontrolshwnd = window
+export const window_getcount = window
+export const window_getid = window
+export const window_getidlast = window
+export const window_getlist = window
+export const window_getminmax = window
+export const window_getpid = window
+export const window_getpos = window
+export const window_getprocessname = window
+export const window_getprocesspath = window
+export const window_getstyle = window
+export const window_getexstyle = window
+export const window_gettext = window
+export const window_gettitle = window
+export const window_gettranscolour = window
+export const window_gettransparent = window
+export const window_hide = window
+export const window_kill = window
+export const window_maximize = window
+export const window_minimize = window
+export const window_move = window
+export const window_movebottom = window
+export const window_movetop = window
+export const window_redraw = window
+export const window_restore = window
+export const window_setalwaysontop = window
+export const window_setenabled = window
+export const window_setregion = window
+export const window_setstyle = window
+export const window_setexstyle = window
+export const window_show = window
+export const window_wait = window
+export const window_waitactive = window
+export const window_waitnotactive = window
+export const window_waitclose = window
+function window(block, generator) { // TODO (low-prio): proper capitalisation
+	const name = block.type.replace(/window_/, '').toTitleCase()
+	const title = generator.valueToCode(block, 'title', Order.ATOMIC)
+	const text = generator.valueToCode(block, 'text', Order.ATOMIC)
+	const extitle = generator.valueToCode(block, 'ex_title', Order.ATOMIC)
+	const extext = generator.valueToCode(block, 'ex_text', Order.ATOMIC)
+
+	let special = "", timeout = ""
+	if (name == "Getclientpos" || name == "Getpos" || name == "Move") {
+		const x = generator.valueToCode(block, 'x', Order.ATOMIC)
+		const y = generator.valueToCode(block, 'y', Order.ATOMIC)
+		const w = generator.valueToCode(block, 'w', Order.ATOMIC)
+		const h = generator.valueToCode(block, 'h', Order.ATOMIC)
+		special = `${x},${y},${w},${h},`
+
+		if (name == "Getclientpos") {
+			special = `${x.addXFix('&')},${y.addXFix('&')},${w.addXFix('&')},${h.addXFix('&')},`
+		}
 	}
+
+	if (name.slice(0, 3) == "Set") {
+		const setting = generator.valueToCode(block, 'setting', Order.ATOMIC)
+		special = setting + ','
+	}
+
+	if (name.slice(0, 4) == "Wait") {
+		const timeout = generator.valueToCode(block, 'timeout', Order.ATOMIC)
+		timeout = timeout + ','
+	}
+
+	try {
+		return `Win${name}(${special}${title},${text},${timeout}${extitle},${extext})`
+	} catch (error) {
+		return [`Win${name}(${title},${text},${extitle},${extext})`, Order.ATOMIC]
+	}
+}
+
+export const window_minimizeall = blockToText
+export const window_minimizeallundo = blockToText
+function blockToText(block, generator) {
+	//TODO: message0 to code (prob not possible)
+	// switch if above no work
+	return block.type.replace(/window_/, '')
+}
+
+/**
+ * Adds the specified prefix and suffix to
+ * the object's string if it is not empty
+ * @param {string} prefix Text that goes before the string
+ * @param {string} suffix Text that goes after the string
+ * @returns The object's string in between the prefix and suffix
+ */
+String.prototype.addXFix = function(prefix = "", suffix = "") {
+    if (this.valueOf() !== "") {
+        return prefix + this.valueOf() + suffix
+    } else {
+        return ""
+    }
 }
 
 String.prototype.toTitleCase = function() { // Just to make output look nice 
 	return this.valueOf().replace(/\S+/g, function(text) {return text[0].toUpperCase() + text.substring(1).toLowerCase()})
+}
+
+/*
+TODO:
+Make below deal with traling commas
+*/
+
+String.prototype.addPreSpace = function(comma) {
+	comma = comma === true ? "," : ""
+	if (this.valueOf() === "") {
+		return ""
+	} else {
+		return comma + " " + this.valueOf()
+	}
 }

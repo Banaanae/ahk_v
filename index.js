@@ -4,10 +4,11 @@ import {setup} from './blocks/setup';
 import {script} from './blocks/script';
 import {kbAndMouse} from './blocks/kbm';
 import {hotkeys} from './blocks/hotkeys';
-import {text} from './blocks/text'
+import {win} from './blocks/window';
+import {text} from './blocks/text';
 import {math} from './blocks/math';
 import {gui} from './blocks/gui';
-import {builtInVars} from './blocks/builtInVars'
+import {builtInVars} from './blocks/builtInVars';
 import {ahkGen} from './codeGen/generator';
 import {toolbox} from './toolbox';
 import './index.css';
@@ -15,10 +16,11 @@ import './index.css';
 // TODO: Dynamic tooltips
 // TODO (Once majority blocks done): Beautify json (Tabs Size 4)
 Blockly.common.defineBlocks(setup);
-Blockly.common.defineBlocks(script)
+Blockly.common.defineBlocks(script);
 Blockly.common.defineBlocks(kbAndMouse);
 Blockly.common.defineBlocks(hotkeys);
-Blockly.common.defineBlocks(text)
+Blockly.common.defineBlocks(win);
+Blockly.common.defineBlocks(text);
 Blockly.common.defineBlocks(math);
 Blockly.common.defineBlocks(gui);
 Blockly.common.defineBlocks(builtInVars);

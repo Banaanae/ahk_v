@@ -8,9 +8,10 @@ It is currently quite early in development, but many simpler blocks and math fun
 
 - [X] Get some common blocks done
 - [X] Make a code generator for ahk
-- [ ] Add more blocks and guis
+- [ ] Make Guis
 - - [ ] Gui Options
-- [ ] Wiki for each saying what it does + examples
+- - [ ] Visualiser
+- [ ] Links to AHK documentation (Or to gh wiki for non native blocks)
 - [ ] Standard colouring
 - [X] Better categories (Sort and duplicate some blocks into multiple categories)
 - [ ] Add shadow blocks

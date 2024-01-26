@@ -12,6 +12,14 @@ export const toolbox = {
 					"kind": "block",
 					"type": "singleinstance"
 				},
+                {
+                    "kind": "block",
+                    "type": "notrayicon"
+                },
+                {
+                    "kind": "block",
+                    "type": "persistent"
+                }
             ]
         },
         {
@@ -55,6 +63,251 @@ export const toolbox = {
 					"type": "hotkey"
 				},
             ]
+        },
+        {
+            "kind": "category",
+            "name": "Window",
+            "contents": [
+                {
+                    "kind": "block",
+                    "type": "window_activate"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_activatebottom"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_active"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_close"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_exist"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getclass"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getclientpos"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getcontrols"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getcontrolshwnd"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getcount"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getid"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getidlast"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getlist"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getminmax"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getpid"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getpos"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getprocessname"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getprocesspath"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getstyle"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_getexstyle"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_gettext"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_gettitle"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_gettranscolour"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_gettransparent"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_hide"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_kill"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_maximize"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_minimize"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_minimizeall"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_minimizeallundo"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_move"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_movebottom"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_movetop"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_redraw"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_restore"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_setalwaysontop"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_setenabled"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_setregion"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_setstyle"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_setexstyle"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_settitle"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_settranscolour"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_settransparent"
+                },
+                {
+                    "kind": "block",
+                    "type": "window_show"
+                }
+            ]
+        },
+        {
+            "kind": "category",
+            "name": "File System",
+            "hidden": 'true', // Remove when blocks are made
+            "contents": []
+        },
+        {
+			"kind": "category",
+			"name": "Gui",
+			"contents": [
+				{
+					"kind": "block",
+					"type": "gui_header"
+				},
+                {
+                    "kind": "block",
+                    "type": "gui_add_text"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_edit"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_picture"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_button"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_checkbox"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_radio"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_ddl"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_combobox"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_listbox"
+                },
+                {
+                    "kind": "block",
+                    "type": "gui_add_datetime"
+                },
+				{
+					"kind": "block",
+					"type": "gui_show"
+				}
+			]
+		},
+        {
+            "kind": "sep"
         },
 		{
             "kind": "category",
@@ -288,60 +541,6 @@ export const toolbox = {
                 }
             ],
         },
-		{
-			"kind": "category",
-			"name": "Gui",
-			"contents": [
-				{
-					"kind": "block",
-					"type": "gui_header"
-				},
-                {
-                    "kind": "block",
-                    "type": "gui_add_text"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_edit"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_picture"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_button"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_checkbox"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_radio"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_ddl"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_combobox"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_listbox"
-                },
-                {
-                    "kind": "block",
-                    "type": "gui_add_datetime"
-                },
-				{
-					"kind": "block",
-					"type": "gui_show"
-				}
-			]
-		},
         {
 			"kind": "category",
 			"name": "Colour",
