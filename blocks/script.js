@@ -1,13 +1,13 @@
-import * as blockly from 'blockly';
+import * as Blockly from 'blockly';
 
-export const script = blockly.common.createBlockDefinitionsFromJsonArray([
+export const script = Blockly.common.createBlockDefinitionsFromJsonArray([
     {
         "type": "sleep",
         "message0": "Sleep %1",
         "args0": [
             {
                 "type": "input_value",
-                "name": "sleep_delay",
+                "name": "INPUT",
                 "check": "Number"
             }
         ],
@@ -24,7 +24,7 @@ export const script = blockly.common.createBlockDefinitionsFromJsonArray([
         "args0": [
               {
                 "type": "input_value",
-                "name": "msgbox_body"
+                "name": "INPUT"
             },
         ],
         "inputsInline": true,

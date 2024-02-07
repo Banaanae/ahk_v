@@ -19,6 +19,14 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "persistent"
+                },
+                {
+                    "kind": "block",
+                    "type": "sendmode"
+                },
+                {
+                    "kind": "block",
+                    "type": "setdefaultmousespeed"
                 }
             ]
         },
@@ -51,6 +59,10 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "sendmode"
+                },
+                {
+                    "kind": "block",
+                    "type": "setdefaultmousespeed"
                 }
             ]
         },
@@ -62,6 +74,10 @@ export const toolbox = {
 					"kind": "block",
 					"type": "hotkey"
 				},
+                {
+                    "kind": "block",
+                    "type": "hotkey_edit"
+                }
             ]
         },
         {
@@ -249,6 +265,12 @@ export const toolbox = {
         {
             "kind": "category",
             "name": "File System",
+            "hidden": 'true', // Remove when blocks are made
+            "contents": []
+        },
+        {
+            "kind": "category",
+            "name": "Dll",
             "hidden": 'true', // Remove when blocks are made
             "contents": []
         },

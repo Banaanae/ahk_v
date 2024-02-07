@@ -136,6 +136,15 @@ export function hotkey(block, generator) {
 	return `${key}:: {\n${statement_members}\n}`;
 }
 
+export function hotkey_edit(block, generator) { // TODO: Works, but needs options
+	const key = block.getFieldValue('hotkey_edit_key');
+	let action = block.getFieldValue('hotkey_edit_action');
+	if (action == 'AltTab') {
+		action = block.getFieldValue('hotkey_edit_alttab')
+	}
+	return `Hotkey("${key}", "${action}")`
+}
+
 export function lists_create_with(block, generator) {
 	const listItems = []
 	for (let i = 0; i < block.itemCount_; i++) {
@@ -300,42 +309,26 @@ export function math_trig(block, generator) {
 	const number = generator.valueToCode(block, 'NUM', Order.ATOMIC)
 	const operator = block.getFieldValue('OP');
 	let code;
-	if (operator === 'ROOT') { // TODO (low-prio): Switch
-		code = `Sqrt(${number})`;
-	} else if (operator === 'ABS') {
-		code = `Abs(${number})`;
-	} else if (operator === 'NEG') {
-		code = `-(${number})`; // Works with both positive and negative
-	} else if (operator === 'LN') {
-		code = `Ln(${number})`;
-	} else if (operator === 'LOG10') {
-		code = `Log(${number})`;
-	} else if (operator === 'EXP') {
-		code = `Exp(${number})`;
-	} else if (operator === 'POW10') {
-		code = `10 ** ${number}`
-	} else if (operator === 'SIN') {
-		code = `Sin(${number})`; 
-	} else if (operator === 'COS') {
-		code = `Cos(${number})`; 
-	} else if (operator === 'TAN') {
-		code = `Tan(${number})`; 
-	} else if (operator === 'ASIN') {
-		code = `ASin(${number})`; 
-	} else if (operator === 'ACOS') {
-		code = `ACos(${number})`; 
-	} else if (operator === 'ATAN') {
-		code = `ATan(${number})`; 
-	} 
+	switch(operator) {
+		case 'ROOT': code = `Sqrt(${number})`; break;
+		case 'ABS': code = `Abs(${number})`; break;
+		case 'NEG': code = `-(${number})`; break; // Works with both positive and negative
+		case 'LN': code = `Ln(${number})`; break;
+		case 'LOG10': code = `Log(${number})`; break;
+		case 'EXP': code = `Exp(${number})`; break;
+		case 'POW10': code = `10 ** ${number}`; break;
+		case 'SIN': code = `Sin(${number})`; break;
+		case 'COS': code = `Cos(${number})`; break;
+		case 'TAN': code = `Tan(${number})`; break;
+		case 'ASIN': code = `ASin(${number})`; break;
+		case 'ACOS': code = `ACos(${number})`; break;
+		case 'ATAN': code = `ATan(${number})`
+	}
 	return [code, Order.ATOMIC];
 };
 
-export const msgbox_simple = msgbox
 export function msgbox(block, generator) { // TODO (low prio): Fix spacing issue
 	const body = generator.valueToCode(block, 'msgbox_body', Order.ATOMIC)
-	if (block.type === "msgbox_simple") {
-		return `MsgBox(${body})`
-	}
 	const title = generator.valueToCode(block, 'msgbox_title', Order.ATOMIC)
 	const buttons = block.getFieldValue('msgbox_buttons_type').replace(/.*_/g, '') + ' '
 	const icon = block.getFieldValue('msgbox_icon_type').replace(/.*_/g, 'Icon') + ' '
@@ -348,13 +341,9 @@ export function msgbox(block, generator) { // TODO (low prio): Fix spacing issue
 	return `MsgBox(${body}, ${title}, "${buttons}${icon}${defaultBtn}${modal}${other}")`;
 }
 
-export function notrayicon(block, generator) {
-	return `#NoTrayIcon`
-}
+export const notrayicon = blockToText
 
-export function persistent(block, generator) {
-	return `Persistent`
-}
+export const persistent = blockToText
 
 export const procedures_defreturn = procedures_defnoreturn
 export function procedures_defnoreturn(block, generator) {
@@ -376,24 +365,20 @@ export function procedures_ifreturn(block, generator) {
 	return `If (${ifVal}) ${returnVal}`
 };
 
+export const msgbox_simple = singleInput
+export const send = singleInput
+export const setdefaultmousespeed = singleInput
+export const sleep = singleInput
+
+
 export function singleinstance(block, generator) {
 	const type = block.getFieldValue('singleinstance_type').replace(/.*_/g, '')
     return `#SingleInstance ${type}`;
 };
 
-export function send(block, generator) {
-	const keys = generator.valueToCode(block, 'send_keys', Order.ATOMIC);
-    return `Send(${keys})`;
-};
-
 export function sendmode(block, generator) {
 	const mode = block.getFieldValue('sendmode_type');
     return `SendMode("${mode}")`;
-};
-
-export function sleep(block, generator) {
-	const delay = generator.valueToCode(block, 'sleep_delay', Order.ATOMIC);
-	return `Sleep(${delay})`;
 };
 
 export function text(block, generator) {
@@ -640,10 +625,15 @@ function window(block, generator) { // TODO (low-prio): proper capitalisation
 
 export const window_minimizeall = blockToText
 export const window_minimizeallundo = blockToText
+
 function blockToText(block, generator) {
-	//TODO: message0 to code (prob not possible)
-	// switch if above no work
-	return block.type.replace(/window_/, '')
+	return generator.getRealName(block.type.replace(/window_/, ''))
+}
+
+function singleInput(block, generator) {
+	const name = generator.getRealName(block.type.toTitleCase())
+	const input = generator.valueToCode(block, 'INPUT', Order.ATOMIC)
+	return `${name}(${input})`
 }
 
 /**

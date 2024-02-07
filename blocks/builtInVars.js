@@ -1,7 +1,6 @@
 import * as Blockly from 'blockly'
 
 export const builtInVars = Blockly.common.createBlockDefinitionsFromJsonArray([
-    // TODO: A_(...) dropdown for each category
     {
         "type": "a_setbuiltin",
         "message0": "Set built in variable %1 to %2",

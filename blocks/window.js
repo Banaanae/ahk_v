@@ -2,9 +2,6 @@ import * as Blockly from 'blockly';
 
 // TODO: WinActive vs WinExist
 // TODO: Tooltips <- Move much of message0
-// TODO: WinMove
-// TODO: WinSet(...)
-// TODO: WinWait(...)
 export const win = Blockly.common.createBlockDefinitionsFromJsonArray([
     {
     "type": "window_activate",

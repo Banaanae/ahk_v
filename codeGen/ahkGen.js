@@ -1,4 +1,4 @@
-import {CodeGenerator, Names, Variables} from "blockly";
+import {CodeGenerator, Names} from "blockly";
 
 export const Order = {
 	ATOMIC: 0,
@@ -64,6 +64,7 @@ export class ahkgen extends CodeGenerator {
     }
     
     finish(code) {
+        code = "#Requires AutoHotkey v2.0\n" + code // Ensure code gets run using v2
         // Convert the definitions dictionary into a list.
         const definitions = Object.values(this.definitions_);
         // Call Blockly.CodeGenerator's finish.
@@ -81,4 +82,20 @@ export class ahkgen extends CodeGenerator {
         }
         return code;
     };
+
+    /**
+     * Checks if `block.type` differs from what the generated
+     * code should be, and changes it if needed. Also used
+     * to add proper capitalisation to some blocks.
+     * @param {string} name The name _(usually `block.type`)_ to change
+     * @returns A valid AHK function
+     */
+    getRealName(name) { // TODO: Capitalisation in ../blocks
+        let realName;
+        switch(name) {
+            case "Msgbox_simple": realName = "MsgBox"; break;
+            default: realName = name
+        }
+        return realName
+    }
 }
