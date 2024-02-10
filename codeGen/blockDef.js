@@ -200,21 +200,16 @@ ${generator.FUNCTION_NAME_PLACEHOLDER_}(y, x) {
 	return [code, Order.FUNCTION_CALL]
 }
 
-export function math_constant(block, generator) {
+export function math_constant_noinf(block, generator) {
 	const constant = block.getFieldValue('CONSTANT') // TODO: Defines variables at top then use down here
-	if (constant === 'PI') { // TODO (low-prio): Make switch
-		var code = 'ATan(1) * 4';
-    } else if (constant === 'E') {
-		var code = 'Exp(1)';
-	} else if (constant === 'GOLDEN_RATIO') {
-		var code = '(1 + Sqrt(5)) / 2'
-	} else if (constant === 'SQRT2') {
-		var code = 'Sqrt(2)';
-    } else if (constant === 'SQRT1_2') {
-		var code = 'Sqrt(1 / 2)';
-	} else if (constant === 'INFINITY') {
-		return ';TODO: Does infinity even exist in ahk';
-    }
+	let code;
+	switch(constant) {
+		case 'PI': code = 'ATan(1) * 4'; break;
+		case 'E': code = 'Exp(1)'; break;
+		case 'GOLDEN_RATIO': code = '(1 + Sqrt(5)) / 2'; break;
+		case 'SQRT2': code = 'Sqrt(2)'; break;
+		case 'SQRT1_2': code = 'Sqrt(1 / 2)';
+	}
 	return [code, Order.ATOMIC]
 }
 

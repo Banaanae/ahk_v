@@ -15,6 +15,7 @@ It is currently quite early in development, but many simpler blocks and math fun
 - [ ] Standard colouring
 - [X] Better categories (Sort and duplicate some blocks into multiple categories)
 - [ ] Add shadow blocks
+- [ ] Fix capitalisation, either in /blocks/* or via getRealName()
 
 
 <sub>This project isn't affiliated with AutoHotKey</sub>

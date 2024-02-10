@@ -1,6 +1,6 @@
-import * as blockly from 'blockly';
+import * as Blockly from 'blockly';
 
-export const text = blockly.common.createBlockDefinitionsFromJsonArray([
+export const text = Blockly.common.createBlockDefinitionsFromJsonArray([
     {
         "type": "text_trim_cust",
         "message0": "trim %1 from %2 of %3",

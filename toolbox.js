@@ -473,7 +473,7 @@ export const toolbox = {
                 },
                 {
                     "kind": "block",
-                    "type": "math_constant"
+                    "type": "math_constant_noinf"
                 },
                 {
                     "kind": "block",
