@@ -19,13 +19,12 @@ function a_(block, generator) {
 export function a_setbuiltin(block, generator) {
 	const a_var = generator.valueToCode(block, 'a_var', Order.ATOMIC)
 	const a_to = generator.valueToCode(block, 'a_to', Order.ATOMIC)
+	block.setWarningText()
 	if (a_var !== generator.getVariableName(a_var)) {
 		block.setWarningText(`Variable "${a_var}" cannot be written to`)
- 	} else {
-		block.setWarningText()
-		return `${a_var} := ${a_to}`
+		return ''
 	}
-	return ""
+	return `${a_var} := ${a_to}`
 }
 
 export function colour_picker(block, generator) {
@@ -157,6 +156,78 @@ export function lists_create_with(block, generator) {
     return [`[${array}]`, Order.ATOMIC]
 }
 
+// https://www.autohotkey.com/boards/viewtopic.php?t=23286#p109173
+export function lists_indexOf(block, generator) { // Unfinished
+	const array = generator.valueToCode(block, 'VALUE', Order.ATOMIC)
+	const from = block.getFieldValue('END')
+	const find = generator.valueToCode(block, 'FIND', Order.ATOMIC)
+	return `; ${array} ${from} ${find}`
+}
+
+export function lists_getIndex(block, generator) {
+	const mode = block.getFieldValue('MODE');
+	const where = block.getFieldValue('WHERE');
+	const array = generator.valueToCode(block, 'VALUE', Order.ATOMIC)
+	const at = generator.valueToCode(block, 'AT', Order.ATOMIC)
+	block.setWarningText()
+	if (at == 0 && at !== "") {
+		block.setWarningText('0 is not a valid index\nNote: The first item\'s index is 1')
+ 	}
+	let index, code;
+	switch(where) {
+		case 'FROM_START': index = `${at}`; break;
+		case 'FROM_END': index = `-${at}`; break;
+		case 'FIRST': index = '1'; break;
+		case 'LAST': index = '-1'; break;
+		case 'RANDOM': index = `Random(1, ${array}.Length)`
+	}
+	switch(mode) {
+		case 'GET': code = `${array}[${index}]`; break;
+		case 'GET_REMOVE': code = `${array}.RemoveAt(${index})`; break;
+		case 'REMOVE': return `${array}.RemoveAt(${index})`
+	}
+	return [code, Order.ATOMIC]
+}
+
+export function lists_isEmpty(block, generator) {
+	const array = generator.valueToCode(block, 'VALUE', Order.ATOMIC)
+	return [`(!${array}.Length)`, Order.ATOMIC]
+}
+
+export function lists_length(block, generator) {
+	const array = generator.valueToCode(block, 'VALUE', Order.ATOMIC)
+	return [`${array}.Length`, Order.ATOMIC]
+}
+
+export function lists_repeat(block, generator) {
+	const item = generator.valueToCode(block, 'ITEM', Order.ATOMIC)
+	const times = generator.valueToCode(block, 'NUM', Order.ATOMIC)
+	const func = generator.provideFunction_('ArrayAddRepeated', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(item, times) {
+  LoopArray := Array()
+  Loop(times) {
+	LoopArray.push(item)
+  }
+  return LoopArray
+}`)
+	const code = func + `(${item}, ${times})`
+	return [code, Order.FUNCTION_CALL]
+}
+
+export function lists_reverse(block, generator) {
+	const array = generator.valueToCode(block, 'LIST', Order.ATOMIC)
+	const func = generator.provideFunction_('ReverseArray', `
+ReverseArray(arr) {
+  reversed := []
+  for index, item in arr {
+    reversed.InsertAt(1, item)
+  }
+  return reversed
+}`)
+	const code = func + `(${array})`
+	return [code, Order.FUNCTION_CALL]
+}
+
 export function logic_boolean(block, generator) {
 	const code = block.getFieldValue('BOOL') === 'TRUE' ? 'true' : 'false';
 	return [code, Order.ATOMIC];
@@ -286,9 +357,9 @@ export function math_round(block, generator) {
 	const roundType = block.getFieldValue('OP')
 	let round;
 	switch(roundType) {
-		case "ROUNDUP": round = "Ceil"; break;
-		case "ROUNDDOWN": round = "Floor"; break;
-		default: round = "Round"
+		case 'ROUNDUP': round = 'Ceil'; break;
+		case 'ROUNDDOWN': round = 'Floor'; break;
+		default: round = 'Round'
 	}
 	return [`${round}(${number})`, Order.ATOMIC]
 }
@@ -384,7 +455,7 @@ export function text(block, generator) {
 export function text_append(block, generator) {
 	const varName = generator.getVariableName(block.getFieldValue('VAR'))
 	const text = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
-	return varName + " .= " +  text
+	return varName + ' .= ' +  text
 }
 
 export const text_changeCase = text_length
@@ -454,7 +525,7 @@ export function text_getSubstring(block, generator) { // TODO: Fix commas
 export function text_indexOf(block, generator) { // TODO: Second block with all InStr options
 	const haystack = generator.valueToCode(block, 'VALUE', Order.ATOMIC)
 	const needle = ', ' + generator.valueToCode(block, 'FIND', Order.ATOMIC)
-	const position = block.getFieldValue('END') === "FIRST" ? "" : ",,, -1"
+	const position = block.getFieldValue('END') === 'FIRST' ? '' : ',,, -1'
 	const code = `InStr(${haystack}${needle}${position})`
 	return [code, Order.ATOMIC]
 }
@@ -588,25 +659,25 @@ function window(block, generator) { // TODO (low-prio): proper capitalisation
 	const extitle = generator.valueToCode(block, 'ex_title', Order.ATOMIC)
 	const extext = generator.valueToCode(block, 'ex_text', Order.ATOMIC)
 
-	let special = "", timeout = ""
-	if (name == "Getclientpos" || name == "Getpos" || name == "Move") {
+	let special = '', timeout = ''
+	if (name == 'Getclientpos' || name == 'Getpos' || name == 'Move') {
 		const x = generator.valueToCode(block, 'x', Order.ATOMIC)
 		const y = generator.valueToCode(block, 'y', Order.ATOMIC)
 		const w = generator.valueToCode(block, 'w', Order.ATOMIC)
 		const h = generator.valueToCode(block, 'h', Order.ATOMIC)
 		special = `${x},${y},${w},${h},`
 
-		if (name == "Getclientpos") {
+		if (name == 'Getclientpos') {
 			special = `${x.addXFix('&')},${y.addXFix('&')},${w.addXFix('&')},${h.addXFix('&')},`
 		}
 	}
 
-	if (name.slice(0, 3) == "Set") {
+	if (name.slice(0, 3) == 'Set') {
 		const setting = generator.valueToCode(block, 'setting', Order.ATOMIC)
 		special = setting + ','
 	}
 
-	if (name.slice(0, 4) == "Wait") {
+	if (name.slice(0, 4) == 'Wait') {
 		const timeout = generator.valueToCode(block, 'timeout', Order.ATOMIC)
 		timeout = timeout + ','
 	}
@@ -638,11 +709,11 @@ function singleInput(block, generator) {
  * @param {string} suffix Text that goes after the string
  * @returns The object's string in between the prefix and suffix
  */
-String.prototype.addXFix = function(prefix = "", suffix = "") {
-    if (this.valueOf() !== "") {
+String.prototype.addXFix = function(prefix = '', suffix = '') {
+    if (this.valueOf() !== '') {
         return prefix + this.valueOf() + suffix
     } else {
-        return ""
+        return ''
     }
 }
 
@@ -656,10 +727,10 @@ Make below deal with traling commas
 */
 
 String.prototype.addPreSpace = function(comma) {
-	comma = comma === true ? "," : ""
-	if (this.valueOf() === "") {
-		return ""
+	comma = comma === true ? ',' : ''
+	if (this.valueOf() === '') {
+		return ''
 	} else {
-		return comma + " " + this.valueOf()
+		return comma + ' ' + this.valueOf()
 	}
 }
