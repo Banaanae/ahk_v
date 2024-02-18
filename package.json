@@ -1,6 +1,6 @@
 {
   "name": "ahk_v",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "AutoHotKey turned into a visual langauge with Blockly ",
   "main": "index.js",
   "private": true,

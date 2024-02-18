@@ -159,9 +159,28 @@ export function lists_create_with(block, generator) {
 // https://www.autohotkey.com/boards/viewtopic.php?t=23286#p109173
 export function lists_indexOf(block, generator) { // Unfinished
 	const array = generator.valueToCode(block, 'VALUE', Order.ATOMIC)
-	const from = block.getFieldValue('END')
+	const from = block.getFieldValue('END') === 'FIRST' ? 0 : 1
 	const find = generator.valueToCode(block, 'FIND', Order.ATOMIC)
-	return `; ${array} ${from} ${find}`
+	const func = generator.provideFunction_('HasVal', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(haystack, needle, isReversed) {
+  if !(IsObject(haystack)) || (haystack.Length = 0)
+    return 0
+  if (isReversed = 1) {
+	reversed := []
+	for index, item in haystack
+	  reversed.InsertAt(1, item)
+	haystack := reversed
+  }
+  for index, value in haystack
+    if (value = needle) {
+      if (isReversed = 1)
+        return haystack.Length + 1 - index
+      return index
+    }
+  return 0
+}`) // TODO (low-prio): Reuse ReverseArray from lists_reverse?
+	const code = func + `(${array}, ${find}, ${from})`
+	return [code, Order.FUNCTION_CALL]
 }
 
 export function lists_getIndex(block, generator) {
@@ -187,6 +206,38 @@ export function lists_getIndex(block, generator) {
 		case 'REMOVE': return `${array}.RemoveAt(${index})`
 	}
 	return [code, Order.ATOMIC]
+}
+
+export function lists_getSublist(block, generator) {
+	const where1 = block.getFieldValue('WHERE1');
+	const at1 = generator.valueToCode(block, 'AT1', Order.ATOMIC)
+	const where2 = block.getFieldValue('WHERE2');
+	const at2 = generator.valueToCode(block, 'AT2', Order.ATOMIC)
+	const array = generator.valueToCode(block, 'LIST', Order.ATOMIC)
+	let index1, index2;
+	switch(where1) {
+		case 'FROM_START': index1 = `${at1}`; break;
+		case 'FROM_END': index1 = `-${at1}`; break;
+		case 'FIRST': index1 = '1'
+	}
+	switch(where2) {
+		case 'FROM_START': index2 = `${at2}`; break;
+		case 'FROM_END': index2 = `-${at2}`; break;
+		case 'LAST': index2 = `${array}.Length`
+	}
+	const func = generator.provideFunction_('SubArr', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr, start, end) {
+  SubArray := ""
+  Loop (end - start + 1) {
+    SubArray .= arr[start + A_Index - 1]
+    if (A_Index < end - start + 1)
+      SubArray .= ","
+  }
+  SubArray := StrSplit(SubArray, ",")
+  return SubArray
+}`) // TODO: Fix < copying as &lt;
+	const code = func + `(${array}, ${index1}, ${index2})`
+	return [code, Order.FUNCTION_CALL]
 }
 
 export function lists_isEmpty(block, generator) {
@@ -228,6 +279,78 @@ ReverseArray(arr) {
 	return [code, Order.FUNCTION_CALL]
 }
 
+export function lists_setIndex(block, generator) {
+	const mode = block.getFieldValue('MODE')
+	const where = block.getFieldValue('WHERE')
+	const array = generator.valueToCode(block, 'LIST', Order.ATOMIC)
+	const at = generator.valueToCode(block, 'AT', Order.ATOMIC)
+	const to = generator.valueToCode(block, 'TO', Order.ATOMIC)
+	let index, code = '';
+	switch(where) {
+		case 'FROM_START': index = `${at}`; break;
+		case 'FROM_END': index = `-${at}`; break;
+		case 'FIRST': index = '1'; break;
+		case 'LAST': index = '-1'; break;
+		case 'RANDOM': index = `Random(1, ${array}.Length)`
+	}
+	if (mode == 'SET') {
+		code = `${array}.RemoveAt(${index})\n`
+	}
+	code += `${array}.InsertAt(${index}, ${to})`
+	return code
+}
+
+export function lists_sort(block, generator) {
+	const type = block.getFieldValue('TYPE')
+	const direction = block.getFieldValue('DIRECTION')
+	const array = generator.valueToCode(block, 'LIST', Order.ATOMIC)
+	const func = generator.provideFunction_('SortArray', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr, type, direction) {
+  options := ""
+  if (type == "NUMERIC") {
+    options .= "N"
+  } else if (type == "TEXT") {
+	option .= "COff"
+  } else {
+	options .= "COn"
+  }
+  if (direction == -1) {
+	options .= "R"
+  }
+  str := ""
+  for index, item in arr
+    str .= item . ","
+  str := RTrim(str, ",")
+  options .= "D,"
+  str := Sort(str, options)
+  return StrSplit(str, ",")
+}`)
+	const code = func + `(${array}, "${type}", ${direction})`
+	return [code, Order.FUNCTION_CALL]
+}
+
+export function lists_split(block, generator) {
+	const mode = block.getFieldValue('MODE')
+	const input = generator.valueToCode(block, 'INPUT', Order.ATOMIC)
+	const delim = generator.valueToCode(block, 'DELIM', Order.ATOMIC)
+	let code;
+	if (mode == 'JOIN'){
+		const func = generator.provideFunction_('ListToText', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr, delim) {
+  str := ""
+  for index, item in arr
+    str .= item . delim
+  str := RTrim(str, delim)
+  return str
+}`)
+		code = func + `(${input}, ${delim})`
+		return [code, Order.FUNCTION_CALL]
+	} else {
+		code = `StrSplit(${input}, ${delim})`
+		return [code, Order.ATOMIC]
+	}
+}
+
 export function logic_boolean(block, generator) {
 	const code = block.getFieldValue('BOOL') === 'TRUE' ? 'true' : 'false';
 	return [code, Order.ATOMIC];
@@ -261,7 +384,7 @@ export function math_arithmetic(block, generator) {
 export function math_atan2(block, generator) {
 	const x = generator.valueToCode(block, 'X', Order.ATOMIC)
 	const y = generator.valueToCode(block, 'Y', Order.ATOMIC)
-	// https://www.autohotkey.com/boards/viewtopic.php?f=76&t=62443&p=265992&sid=4c116fa52defc2001b2604bc4f542bfb#p265922
+	// https://www.autohotkey.com/boards/viewtopic.php?&p=265992#p265922
 	const func = generator.provideFunction_('ATan2', `
 ${generator.FUNCTION_NAME_PLACEHOLDER_}(y, x) {
   return DllCall("msvcrt\\atan2", "Double", y, "Double", x, "CDECL Double")
