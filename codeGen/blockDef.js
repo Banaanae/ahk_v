@@ -1,6 +1,7 @@
 import {Order} from './ahkGen'
 
 //TODO: Merge similar block generators (e.g math_single and math_ round)
+// TODO: controls_if colour_blend controls_for
 
 export const a_special = a_
 export const a_property = a_
@@ -57,6 +58,22 @@ ${generator.FUNCTION_NAME_PLACEHOLDER_}(r := 0, g := 0, b := 0) {
 }`)
 	const code = func + `(${r}, ${g}, ${b})`
 	return [code, Order.FUNCTION_CALL]
+}
+
+export function controls_flow_statements(block, generator) {
+	const code = block.getFieldValue('FLOW').toTitleCase()
+	return code
+}
+
+export function controls_forEach(block, generator) {
+	const item = generator.getVariableName(block.getFieldValue('VAR'))
+	const arr = generator.valueToCode(block, 'LIST', Order.ATOMIC)
+	const statement_members = generator.statementToCode(block, 'DO')
+	const code = `
+for index, ${item} in ${arr} {
+${statement_members}
+}`
+	return code
 }
 
 export function controls_if(block, generator) { // Unfinished
@@ -356,6 +373,19 @@ export function logic_boolean(block, generator) {
 	return [code, Order.ATOMIC];
 }
 
+export function logic_negate(block, generator) {
+	const code = '!' + generator.valueToCode(block, 'BOOL', Order.ATOMIC)
+	return [code, Order.ATOMIC]
+}
+
+export function logic_ternary(block, generator) {
+	const test = generator.valueToCode(block, 'IF', Order.ATOMIC)
+	const then = generator.valueToCode(block, 'THEN', Order.ATOMIC)
+	const otherwise = generator.valueToCode(block, 'ELSE', Order.ATOMIC)
+	const code = `${test} ? ${then} : ${otherwise}`
+	return [code, Order.ATOMIC]
+}
+
 export const logic_compare = math_arithmetic
 export const logic_operation = math_arithmetic
 export function math_arithmetic(block, generator) {
@@ -452,19 +482,90 @@ ${generator.FUNCTION_NAME_PLACEHOLDER_}(n) {
 	return [code, Order.ATOMIC]
 }
 
-export function math_on_list(block, generator) { // Unfinished
-	const list = generator.valueToCode(block, 'LIST', Order.ATOMIC)
+export function math_on_list(block, generator) {
+	const array = generator.valueToCode(block, 'LIST', Order.ATOMIC)
 	const op = block.getFieldValue('OP')
 	let code;
-	if (op === 'RANDOM') {
-		const func = generator.provideFunction_('ArrayRandom', `
-${generator.FUNCTION_NAME_PLACEHOLDER_}(list) {
-  randomItem := list[Random(1, list.Length)]
-  return randomItem
+	if (op === 'SUM') {
+		const func = generator.provideFunction_('ArraySum', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr) {
+  sum := 0
+  Loop(arr.Length) {
+    sum += arr[A_Index]
+  }
+  return sum
 }`)
-	code = func + `(${list})`
+		code = func + `(${array})`
+	} else if (op === 'MIN' || op === 'MAX') {
+		const func = generator.provideFunction_('ArrayMinMax', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr, MinMax) {
+  val := arr[1]
+  if (MinMax = "MIN") {
+	Loop(arr.Length) {
+	  if (val > arr[A_Index])
+	    val := arr[A_Index]
 	}
-	return [op +'\n'+code, Order.FUNCTION_CALL]
+  } else if (MinMax = "MAX") {
+    Loop(arr.Length) {
+      if (val < arr[A_Index])
+        val := arr[A_Index]
+    }
+  }
+  return val
+}`)
+		code = func + `(${array}, ${op})`
+	} else if (op === 'AVERAGE') {
+		const func = generator.provideFunction_('ArrayAverage', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr) {
+  val := 0
+  Loop(arr.Length) {
+	val += arr[A_Index]
+  }
+  return val /= arr.Length
+}`)
+		code = func + `(${array})`
+	} else if (op === 'MEDIAN') {
+		const func = generator.provideFunction_('ArrayMedian', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr) {
+  str := ""
+  for index, item in arr
+    str .= item . ","
+  arr := StrSplit(Sort(RTrim(str, ","), "ND,"), ",")
+  pos := (arr.Length + 1) / 2
+  if (pos != Round(pos)) {
+    return (arr[Floor(pos)] + arr[Ceil(pos)]) / 2
+  }
+  return arr[pos]
+}`)
+		code = func + `(${array})`
+	} else if (op === 'MODE') {
+		const func = generator.provideFunction_('ArrayMode', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr) {
+  ; TODO: MODE
+}`)
+		code = func + `(${array})`
+	} else if (op === 'STD_DEV') {
+		const func = generator.provideFunction_('ArrayStdDev', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr) {
+  mean := sd2 := 0
+  for val in arr
+    mean += val
+  
+  mean /= arr.Length
+  for val in arr
+    sd2 += (val - mean) ** 2
+  
+  return sqrt(sd2 / arr.Length)
+}`)
+		code = func + `(${array})`
+	} else if (op === 'RANDOM') {
+		const func = generator.provideFunction_('ArrayRandom', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(arr) {
+  return randomItem := arr[Random(1, arr.Length)]
+}`)
+	code = func + `(${array})`
+	}
+	return [code, Order.FUNCTION_CALL]
 }
 
 export const math_random_float = math_random_int
