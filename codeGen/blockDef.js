@@ -33,6 +33,28 @@ export function colour_picker(block, generator) {
 	return colour
 }
 
+export function colour_blend(block, generator) {
+	const colour1 = generator.valueToCode(block, 'COLOUR1', Order.ATOMIC)	
+	const colour2 = generator.valueToCode(block, 'COLOUR2', Order.ATOMIC)
+	const ratio = generator.valueToCode(block, 'RATIO', Order.ATOMIC)
+	const func = generator.provideFunction_('BlendColour', `
+${generator.FUNCTION_NAME_PLACEHOLDER_}(c1, c2, ratio) {
+  ratio := Max(Min(ratio, 1), 0)
+  r1 := Format("{:d}", "0x" SubStr(c1, 2, 2))
+  g1 := Format("{:d}", "0x" SubStr(c1, 4, 2))
+  b1 := Format("{:d}", "0x" SubStr(c1, 6, 2))
+  r2 := Format("{:d}", "0x" SubStr(c2, 2, 2))
+  g2 := Format("{:d}", "0x" SubStr(c2, 4, 2))
+  b2 := Format("{:d}", "0x" SubStr(c2, 6, 2))
+  colour := Format("#{:X}", Round(r1 * (1 - ratio) + r2 * ratio))
+  colour .= Format("{:X}", Round(g1 * (1 - ratio) + g2 * ratio))
+  colour .= Format("{:X}", Round(b1 * (1 - ratio) + b2 * ratio))
+  return colour
+}`)
+	const code = func + `(${colour1}, ${colour2}, ${ratio})` 
+	return [code, Order.FUNCTION_CALL] 
+}
+
 export function colour_random(block, generator) {
 	const func = generator.provideFunction_('randomColour', `
 ${generator.FUNCTION_NAME_PLACEHOLDER_}() {	
