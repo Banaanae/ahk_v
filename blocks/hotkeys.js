@@ -11,7 +11,9 @@ export const hotkeys = Blockly.common.createBlockDefinitionsFromJsonArray([
                 "text": "key"
             },
             {
-                "type": "input_dummy",
+                "type": "input_value",
+                "name": "hotif",
+                "check": "HOTIF"
             },
             {
                 "type": "input_statement",
@@ -20,6 +22,20 @@ export const hotkeys = Blockly.common.createBlockDefinitionsFromJsonArray([
         ],
         "colour": 180,
         "tooltip": "Code inside this block will run when the user presses the key",
+        "helpUrl": ""
+    },
+    {
+        "type": "hotkey_hash_hotif",
+        "message0": "#HotIf %1",
+        "args0": [
+            {
+                "type": "input_value",
+                "name": "INPUT"
+            }
+        ],
+        "output": null,
+        "colour": 180,
+        "tooltip": "Make the hotkey context-sensitive",
         "helpUrl": ""
     },
     {

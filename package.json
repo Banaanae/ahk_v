@@ -23,7 +23,10 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "@blockly/toolbox-search": "^1.2.5",
-    "blockly": "^10.3.0"
+    "@blockly/field-colour": "^5.0.2",
+    "@blockly/field-date": "^9.0.2",
+    "@blockly/field-multilineinput": "^5.0.2",
+    "@blockly/toolbox-search": "^2.0.2",
+    "blockly": "^11.1.0"
   }
 }

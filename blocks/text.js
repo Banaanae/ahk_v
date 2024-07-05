@@ -1,5 +1,11 @@
 import * as Blockly from 'blockly';
+//import { FieldMultilineInput } from '@blockly/field-multilineinput';
 
+
+//FieldMultilineInput.register(Blockly);
+//var multilineInput = new Blockly.FieldMultilineInput('default text');
+//var block = workspace.newBlock('text_print');
+//block.setFieldValue(multilineInput, 'TEXT');
 export const text = Blockly.common.createBlockDefinitionsFromJsonArray([
     {
         "type": "text_trim_cust",
@@ -38,4 +44,21 @@ export const text = Blockly.common.createBlockDefinitionsFromJsonArray([
         "tooltip": "Removes the specified text from the selected side/s",
         "helpUrl": ""
     },
+	/*{
+	"type": "text_multilineinput",
+	"message0": "multilineinput: %1",
+	"args0": [
+		{
+			"type": "field_multilineinput",
+			"name": "FIELDNAME",
+			"text": "some text \n with newlines"
+		}
+	],
+	"inputsInline": true,
+	"output": null,
+	"colour": 160,
+	"tooltip": "Multi-line text input",
+	"helpUrl": ""
+	},*/
+	
 ])

@@ -51,5 +51,21 @@ export const setup = Blockly.common.createBlockDefinitionsFromJsonArray([
       "colour": 300,
       "tooltip": "Makes the script stay open, even if it has nothing to do",
       "helpUrl": ""
+    },
+    {
+        "type": "hash_clipboard_timeout",
+        "message0": "#ClipboardTimeout %1",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "INPUT",
+            "check": "Number"
+          }
+        ],
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 300,
+        "tooltip": "Changes how long the script keeps trying to access the clipboard when the first attempt fails.",
+        "helpUrl": "",
     }
 ])

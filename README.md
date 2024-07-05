@@ -25,7 +25,10 @@ Most blocks behave exactly the same as their written counterparts on [the AHK v2
 - [ ] Fix capitalisation, either in /blocks/* or via getRealName()
 - [ ] Split code generators into seperate files
 - - [ ] Global useful functions eg singleInput
-- [ ] More validation eg check for missing inputs
+- [ ] More validation
+- - [ ] Check for missing inputs
+- - [ ] Add more checks for what types fields accept
+- [ ] Two toolboxes, simple and full
 
 
 <sub>This project isn't affiliated with AutoHotKey</sub>

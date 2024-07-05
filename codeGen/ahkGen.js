@@ -93,6 +93,7 @@ export class ahkgen extends CodeGenerator {
     getRealName(name) { // TODO: Capitalisation in ../blocks
         let realName;
         switch(name) {
+            case "Hash_clipboard_timeout": realName = "#ClipboardTimeout"; break;
             case "Msgbox_simple": realName = "MsgBox"; break;
             default: realName = name
         }

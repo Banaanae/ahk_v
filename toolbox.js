@@ -1,6 +1,9 @@
 //https://gist.githubusercontent.com/alschmiedt/2085af32381db89d1f1ca80d5883c0d5/raw/20719c233061ec612af9efb29df6debc658763a9/gistfile1.txt
 import '@blockly/toolbox-search';
+//import '@blockly/field-colour';
+//import {registerFieldMultilineInput} from '@blockly/field-multilineinput';
 
+//registerFieldMultilineInput();
 export const toolbox = {
 	"kind": "categoryToolbox",
 	"contents": [
@@ -19,6 +22,10 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "persistent"
+                },
+                {
+                    "kind": "block",
+                    "type": "hash_clipboard_timeout"
                 },
                 {
                     "kind": "block",
@@ -73,6 +80,10 @@ export const toolbox = {
                 {
 					"kind": "block",
 					"type": "hotkey"
+				},
+                {
+					"kind": "block",
+					"type": "hotkey_hash_hotif"
 				},
                 {
                     "kind": "block",
@@ -339,10 +350,10 @@ export const toolbox = {
 					"kind": "block",
 					"type": "text"
 				},
-                {
+                /*{
                     "kind": "block",
                     "type": "text_multiline"
-                },
+                },*/
                 {
                     "kind": "block",
                     "type": "text_join"
@@ -563,13 +574,13 @@ export const toolbox = {
                 }
             ],
         },
-        {
+        /*{
 			"kind": "category",
 			"name": "Colour",
 			"contents": [
 				{
                     "kind": "block",
-                    "type": "colour_picker"
+                    "type": "test_field_colour"
                 },
                 {
                     "kind": "block",
@@ -584,7 +595,7 @@ export const toolbox = {
                     "type": "colour_blend"
                 }
 			]
-		},
+		},*/
         {
             "kind": "sep"
         },

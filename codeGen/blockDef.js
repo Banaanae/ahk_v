@@ -1,7 +1,7 @@
 import {Order} from './ahkGen'
 
 //TODO: Merge similar block generators (e.g math_single and math_ round)
-// TODO: controls_if colour_blend controls_for
+// TODO: colour_blend controls_for
 
 export const a_special = a_
 export const a_property = a_
@@ -98,19 +98,20 @@ ${statement_members}
 	return code
 }
 
-export function controls_if(block, generator) { // Unfinished
-	const statement_members = generator.statementToCode(block, 'DO')
-	// var args = [];
-	// var variables = block.getVars();
-	// for (var i = 0; i < variables.length; i++) {
-	// 	args[i] = generator.getVariableName(variables[i]);
-	// }
-	//const ifElseCount = block.
-	//console.log(ifElseCount)
-	const elseBlocks = generator.statementToCode(block, 'ELSE', Order.ATOMIC)
-	const isElse = elseBlocks === '' ? '' : ` else {\n${elseBlocks}\n}`;
-	const code = `if() {\n${statement_members}\n}${isElse}`
-	return code
+export function controls_if(block, generator) {
+	let n = 0;
+	let code = '';
+	while (block.getInput('IF' + n)) {
+		const conditionCode = generator.valueToCode(block, 'IF' + n, Order.ATOMIC) || false;
+		const branchCode = generator.statementToCode(block, 'DO' + n)
+		code += (n > 0 ? ' else ' : '') + 'if (' + conditionCode + ') {\n' + branchCode + '\n}';
+		n++;
+	}
+	if (block.getInput('ELSE')) {
+		const branchCode = generator.statementToCode(block, 'ELSE')
+		code += ' else {\n' + branchCode + '}';
+	}
+	return code + '\n'
 }
 
 export function controls_repeat_ext(block, generator) {
@@ -171,7 +172,8 @@ export function gui_show(block, generator) {
 export function hotkey(block, generator) {
 	const key = block.getFieldValue('hotkey_key');
 	const statement_members = generator.statementToCode(block, 'hotkey_blocks');
-	return `${key}:: {\n${statement_members}\n}`;
+	const hotif = generator.valueToCode(block, 'hotif', Order.ATOMIC) + "\n"
+	return `${hotif}${key}:: {\n${statement_members}\n}`;
 }
 
 export function hotkey_edit(block, generator) { // TODO: Works, but needs options
@@ -181,6 +183,11 @@ export function hotkey_edit(block, generator) { // TODO: Works, but needs option
 		action = block.getFieldValue('hotkey_edit_alttab')
 	}
 	return `Hotkey("${key}", "${action}")`
+}
+
+export function hotkey_hash_hotif(block, generator) {
+	const hotifVal = generator.valueToCode(block, 'INPUT', Order.ATOMIC)
+	return [`#HotIf ${hotifVal}`, Order.ATOMIC]
 }
 
 export function lists_create_with(block, generator) {
@@ -657,6 +664,8 @@ export const notrayicon = blockToText
 
 export const persistent = blockToText
 
+export const hash_clipboard_timeout = directive
+
 export const procedures_defreturn = procedures_defnoreturn
 export function procedures_defnoreturn(block, generator) {
 	const funcName = block.getFieldValue('NAME').replace(/\W/g, '');
@@ -928,11 +937,11 @@ function window(block, generator) { // TODO (low-prio): proper capitalisation
 		timeout = timeout + ','
 	}
 
-	try {
-		return `Win${name}(${special}${title},${text},${timeout}${extitle},${extext})`
-	} catch (error) {
+	//try {
 		return [`Win${name}(${title},${text},${extitle},${extext})`, Order.ATOMIC]
-	}
+	//} catch (error) {
+	//	return `Win${name}(${special}${title},${text},${timeout}${extitle},${extext})`
+	//}
 }
 
 export const window_minimizeall = blockToText
@@ -946,6 +955,12 @@ function singleInput(block, generator) {
 	const name = generator.getRealName(block.type.toTitleCase())
 	const input = generator.valueToCode(block, 'INPUT', Order.ATOMIC)
 	return `${name}(${input})`
+}
+
+function directive(block, generator) {
+	const name = generator.getRealName(block.type.toTitleCase())
+	const input = generator.valueToCode(block, 'INPUT', Order.ATOMIC)
+	return `${name} ${input}`
 }
 
 /**
