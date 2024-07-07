@@ -44,6 +44,37 @@ export const text = Blockly.common.createBlockDefinitionsFromJsonArray([
         "tooltip": "Removes the specified text from the selected side/s",
         "helpUrl": ""
     },
+    {
+      "type": "text_regexmatch",
+      "message0": "Match %1 with RegEx / %2 / %3 and save results to %4",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "source_string",
+          "check": "String"
+        },
+        {
+          "type": "input_value",
+          "name": "regex_body",
+          "check": "String"
+        },
+        {
+          "type": "input_value",
+          "name": "regex_options",
+          "check": "String"
+        },
+        {
+          "type": "input_value",
+          "name": "out_var",
+          "check": "String"
+        }
+      ],
+      "inputsInline": true,
+      "output": null,
+      "colour": 160,
+      "tooltip": "Returns the position of the first found match using the specified RegEx, and saves specific information on matches to the specified variable",
+      "helpUrl": "",
+    }
 	/*{
 	"type": "text_multilineinput",
 	"message0": "multilineinput: %1",

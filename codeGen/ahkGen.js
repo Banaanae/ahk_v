@@ -95,6 +95,7 @@ export class ahkgen extends CodeGenerator {
         switch(name) {
             case "Hash_clipboard_timeout": realName = "#ClipboardTimeout"; break;
             case "Msgbox_simple": realName = "MsgBox"; break;
+            case "notrayicon": realName = "#NoTrayIcon"; break;
             default: realName = name
         }
         return realName

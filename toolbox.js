@@ -388,6 +388,10 @@ export const toolbox = {
                 },
                 {
                     "kind": "block",
+                    "type": "text_regexmatch"
+                },
+                {
+                    "kind": "block",
                     "type": "text_changeCase"
                 },
                 {

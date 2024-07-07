@@ -728,14 +728,19 @@ export function text_length(block, generator) { // TODO: Doesn't work when chang
 export function text_charAt(block, generator) {
 	const locType = block.getFieldValue('WHERE')
 	const text = generator.valueToCode(block, 'VALUE', Order.NONE)
-	const at = generator.valueToCode(block, 'AT', Order.NONE)
+	let at, ranVar;
+	if (locType != 'RANDOM') {
+		at = generator.valueToCode(block, 'AT', Order.NONE)
+	} else {
+		ranVar = generator.getVariableName("RandomTemp")
+	}
 	let code;
 	switch(locType) {
 		case 'FROM_START': code = `SubStr(${text}, ${at}, 1)`; break;
 		case 'FROM_END': code = `SubStr(${text}, ${-Math.abs(at)}, 1)`; break;
 		case 'FIRST': code = `SubStr(${text}, 1, 1)`; break;
 		case 'LAST': code = `SubStr(${text}, StrLen(${text}), 1)`; break;
-		case 'RANDOM': code = `SubStr(${text}, Random(StrLen(${text})), 1)`
+		case 'RANDOM': code = `SubStr(${ranVar} := ${text}, Random(StrLen(${ranVar}))), 1)`
 	}
 	return [code, Order.ATOMIC]
 }
@@ -827,9 +832,29 @@ ${generator.FUNCTION_NAME_PLACEHOLDER_}(str) {
   DllCall("msvcrt.dll\\_wcsrev", "Str", &str, "CDECL")
   return str
 }
-	`) // TODO: Find dllcall source
+	`)
 	const code = func + `(${text})`
 	return [code, Order.FUNCTION_CALL]
+}
+
+export function text_regexmatch(block, generator) {
+	const source_string = generator.valueToCode(block, 'source_string', Order.ATOMIC)
+	const regex_body = generator.valueToCode(block, 'regex_body', Order.ATOMIC).replace(/^"(.*)"$/, "$1")
+	const regex_options = generator.valueToCode(block, 'regex_options', Order.ATOMIC).replace(/^"(.*)"$/, "$1")
+	const fregex_options = regex_options != "" ? regex_options + ')' : ""
+	const out_var = generator.valueToCode(block, 'out_var', Order.ATOMIC)
+	let fout_var;
+	if (out_var != "") {
+		if (out_var == out_var.replace(/^"(.*)"$/, "$1")) { // Doesn't appear to be a way to limit a field input to variables
+			fout_var = ', &' + out_var						// So this handles both, only text gets a valid name
+		} else {
+			fout_var = ', &' + generator.getVariableName(out_var.replace(/^"(.*)"$/, "$1"))
+		}
+	} else {
+		fout_var = ""
+	}
+	let code = `RegExMatch(${source_string}, "${fregex_options}${regex_body}"${fout_var})`
+	return [code, Order.ATOMIC]
 }
 
 export const text_trim = text_trim_cust
