@@ -169,4 +169,20 @@ export const script = Blockly.common.createBlockDefinitionsFromJsonArray([
         "tooltip": "Creates a message box with the listed options",
         "helpUrl": ""
     },
+    {
+        "type": "exitapp",
+        "message0": "ExitApp %1",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "INPUT",
+            "check": "Number"
+          }
+        ],
+        "inputsInline": true,
+        "previousStatement": null,
+        "colour": 230,
+        "tooltip": "Stops the script from running",
+        "helpUrl": ""
+    },
 ]) 

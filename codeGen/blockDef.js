@@ -116,8 +116,9 @@ export function controls_if(block, generator) {
 
 export function controls_repeat_ext(block, generator) {
 	const times = generator.valueToCode(block, 'TIMES', Order.NONE)
+	const ftimes = times != "" ? `(${times})` : ""
 	const statement_members = generator.statementToCode(block, 'DO')
-	return `Loop(${times}) {\n${statement_members}\n}`
+	return `Loop${ftimes} {\n${statement_members}\n}`
 }
 
 export function controls_whileUntil(block, generator) {
@@ -134,6 +135,8 @@ export function controls_whileUntil(block, generator) {
 	const code = `${mode}(${condition}) {\n${statement_members}\n}${until}`
 	return code
 }
+
+export const exitapp = singleInput
 
 export const gui_add_text = gui_add
 export const gui_add_edit = gui_add

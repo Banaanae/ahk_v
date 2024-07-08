@@ -53,6 +53,10 @@ export const toolbox = {
                     "kind": "block",
                     "type": "msgbox"
                 },
+                {
+                    "kind": "block",
+                    "type": "exitapp"
+                }
 			],
 		},
         {

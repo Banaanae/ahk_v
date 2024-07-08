@@ -28,6 +28,7 @@ Most blocks behave exactly the same as their written counterparts on [the AHK v2
 - [ ] More validation
 - - [ ] Check for missing inputs
 - - [ ] Add more checks for what types fields accept
+- - [ ] Sanitise inputs better (eg double quotes)
 - [ ] Two toolboxes, simple and full
 
 
