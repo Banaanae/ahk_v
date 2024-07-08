@@ -490,7 +490,10 @@ export function math_number(block, generator) {
 export function math_number_property(block, generator) {
 	const prop = block.getFieldValue('PROPERTY')
 	const number = generator.valueToCode(block, 'NUMBER_TO_CHECK', Order.ATOMIC)
-	const divisor = generator.valueToCode(block, 'DIVISOR', Order.ATOMIC)
+	let divisor;
+	if (prop == 'DIVISIBLE_BY') {
+		divisor = generator.valueToCode(block, 'DIVISOR', Order.ATOMIC)
+	}
 	let code;
 	switch(prop) {
 		case 'EVEN': code = `(Mod(${number}, 2) == 0)`; break;
@@ -818,7 +821,7 @@ export function text_multiline(block, generator) {
 export function text_prompt_ext(block, generator) {
 	const text = generator.valueToCode(block, 'TEXT', Order.ATOMIC)
 	const type = block.getFieldValue('TYPE')
-	return [`InputBox(${text})`, Order.ATOMIC] // TODO: Use type
+	return [`InputBox(${text}).Value`, Order.ATOMIC] // TODO: Use type
 }
 
 export function text_replace(block, generator) { // TODO: Custom with all options
