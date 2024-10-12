@@ -74,6 +74,10 @@ export const toolbox = {
                 {
                     "kind": "block",
                     "type": "setdefaultmousespeed"
+                },
+                {
+                    "kind": "block",
+                    "type": "click"
                 }
             ]
         },

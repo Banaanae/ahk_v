@@ -28,6 +28,23 @@ export function a_setbuiltin(block, generator) {
 	return `${a_var} := ${a_to}`
 }
 
+export function click(block, generator) {
+	const button = block.getFieldValue('button')
+	let type = block.getFieldValue('type')
+	if (type === "click") {
+		type = ""
+	}
+	const x = generator.valueToCode(block, 'x', Order.ATOMIC)
+	const y = generator.valueToCode(block, 'y', Order.ATOMIC)
+	const times = generator.valueToCode(block, 'times', Order.ATOMIC)
+	const relative = block.getFieldValue('rel')
+	let rel = "";
+	if (relative === "TRUE") {
+		rel = " rel"
+	}
+	return `Click(${x}, ${y}, "${times} ${button} ${type}${rel}")` // TODO: Spacing
+}
+
 export function colour_picker(block, generator) {
 	const colour = block.getFieldValue('COLOUR')
 	return colour
