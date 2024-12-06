@@ -689,9 +689,25 @@ export const persistent = blockToText
 
 export const hash_clipboard_timeout = directive
 
+export const procedures_callnoreturn = procedures_callreturn
+export function procedures_callreturn(block, generator) {
+	const funcName = generator.getProcedureName(block.getFieldValue('NAME'));
+	const args = [];
+	const variables = block.getVars();
+	for (let i = 0; i < variables.length; i++) {
+	  args[i] = generator.valueToCode(block, 'ARG' + i, Order.NONE) || '';
+	}
+	const code = funcName + '(' + args.join(', ') + ')';
+	if (block.type === 'procedures_callreturn') {
+		return [code, Order.NONE];
+	} else {
+		return code
+	}
+}
+
 export const procedures_defreturn = procedures_defnoreturn
 export function procedures_defnoreturn(block, generator) {
-	const funcName = block.getFieldValue('NAME').replace(/\W/g, '');
+	const funcName = generator.getProcedureName(block.getFieldValue('NAME'));
 	var args = [];
 	var variables = block.getVars();
 	for (var i = 0; i < variables.length; i++) {
