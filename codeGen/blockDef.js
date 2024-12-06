@@ -698,7 +698,10 @@ export function procedures_defnoreturn(block, generator) {
 		args[i] = generator.getVariableName(variables[i]);
 	}
 	const statement_members = generator.statementToCode(block, 'STACK', true);
-	const returnVal = generator.valueToCode(block, 'RETURN', Order.NONE) // TODO: No return for block procedures_defnoreturn
+	var returnVal;
+	if (block.getInput('RETURN')) {
+		returnVal = generator.valueToCode(block, 'RETURN', Order.NONE);
+	}
 	const returned = returnVal !== undefined ? `\n${generator.INDENT}return ${returnVal}` : ''
     return `${funcName}(${args.join(', ')}) {\n${statement_members}${returned}\n}`;
 };
